@@ -3,12 +3,16 @@ package br.com.alura.clientelo;
 import java.util.*;
 
 public class PedidosEstatisticas {
-    private final Set<ProdutoEstatisticas> produtoEstatisticas;
+    private final Set<ProdutoEstatisticas> produtosEstatisticas;
     private final Map<String, ProdutoEstatisticas> produtos;
+    private final Map<String, CategoriaEstatisticas> categoriasEstatisticas;
+    private final Set<String> categorias;
 
     public PedidosEstatisticas() {
-        this.produtoEstatisticas = new TreeSet<>();
+        this.produtosEstatisticas = new TreeSet<>();
+        this.categoriasEstatisticas = new HashMap<>();
         produtos = new HashMap<>();
+        categorias = new TreeSet<>();
     }
 
     public void addPedidos(Pedido[] pedidos) {
@@ -16,27 +20,54 @@ public class PedidosEstatisticas {
              pedidos) {
             if (pedido != null)  {
                 String produto = pedido.getProduto();
-                if (!produtos.containsKey(produto)) insertProduto(pedido, produto);
-                else updateProduto(pedido, produto);
+                String categoria = pedido.getCategoria();
+                insertProduto(pedido, produto);
+
+                insertCategoria(pedido, categoria);
             }
         }
     }
 
-    private void updateProduto(Pedido pedido, String produto) {
-        ProdutoEstatisticas estatisticas = produtos.get(produto);
-        estatisticas.adicionaNVendas(pedido.getQuantidade());
+    private void insertCategoria(Pedido pedido, String categoria) {
+        if (!categorias.contains(categoria)) {
+            insertNovaCategoria(pedido, categoria);
+        }
+        else {
+            updateCategoria(pedido, categoria);
+        }
+    }
+
+    private void updateCategoria(Pedido pedido, String categoria) {
+        CategoriaEstatisticas categoriaEstatisticas = categoriasEstatisticas.get(categoria);
+        categoriaEstatisticas.adicionaPedido(pedido);
+    }
+
+    private void insertNovaCategoria(Pedido pedido, String categoria) {
+        CategoriaEstatisticas categoriaEstatisticas = new CategoriaEstatisticas(pedido);
+        categorias.add(categoria);
+        categoriasEstatisticas.put(categoria, categoriaEstatisticas);
     }
 
     private void insertProduto(Pedido pedido, String produto) {
-        ProdutoEstatisticas estatisticas = new ProdutoEstatisticas(pedido);
-        produtoEstatisticas.add(estatisticas);
-        produtos.put(produto, estatisticas);
+        if (!produtos.containsKey(produto)) insertNovoProduto(pedido, produto);
+        else updateProduto(pedido, produto);
+    }
+
+    private void updateProduto(Pedido pedido, String produto) {
+        ProdutoEstatisticas produtoEstatisticas = produtos.get(produto);
+        produtoEstatisticas.adicionaNVendas(pedido.getQuantidade());
+    }
+
+    private void insertNovoProduto(Pedido pedido, String produto) {
+        ProdutoEstatisticas produtoEstatisticas = new ProdutoEstatisticas(pedido);
+        produtosEstatisticas.add(produtoEstatisticas);
+        produtos.put(produto, produtoEstatisticas);
     }
 
     public List<ProdutoEstatisticas> produtosMaisVendidos(int n) {
         List<ProdutoEstatisticas> maisVendidos = new ArrayList<>(n);
 
-        Iterator<ProdutoEstatisticas> iterator = produtoEstatisticas.iterator();
+        Iterator<ProdutoEstatisticas> iterator = produtosEstatisticas.iterator();
         int i = 0;
         while (iterator.hasNext() && i < 3) {
             maisVendidos.add(iterator.next());
@@ -46,5 +77,13 @@ public class PedidosEstatisticas {
         return maisVendidos;
     }
 
+    public List<CategoriaEstatisticas> vendasPorCategoria() {
+        List<CategoriaEstatisticas> answer = new ArrayList<>();
+        for (String categoria :
+                categorias) {
+            answer.add(categoriasEstatisticas.get(categoria));
+        }
+        return answer;
+    }
 
 }
