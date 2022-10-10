@@ -21,7 +21,7 @@ public class Relatorio {
     }
 
     public String vendasPorCategoria() {
-        StringBuffer buffer = new StringBuffer("\n");
+        StringBuffer buffer = new StringBuffer("\nVENDAS POR CATEGORIA\n");
         List<CategoriaEstatisticas> categorias = pedidosEstatisticas.vendasPorCategoria();
 
         for (int i = 0; i < categorias.size(); i++) {
@@ -30,6 +30,20 @@ public class Relatorio {
             buffer.append("QUANTIDADE VENDIDA: " + categoria.getQtdVendas() + "\n");
             buffer.append("MONTANTE: " + categoria.getMontante() + "\n\n");
         }
+        return buffer.toString();
+    }
+
+    public String maisCaroPorCategoria() {
+        StringBuffer buffer = new StringBuffer("\nMAIS CARO POR CATEGORIA\n");
+        List<CategoriaEstatisticas> categorias = pedidosEstatisticas.vendasPorCategoria();
+
+        for (int i = 0; i < categorias.size(); i++) {
+            CategoriaEstatisticas categoria = categorias.get(i);
+            buffer.append("CATEGORIA: " + categoria.getCategoria() + "\n");
+            buffer.append("PRODUTO: " + categoria.getProdutoMaisCaro() + "\n");
+            buffer.append("PREÇO: " + categoria.getPrecoMaisCaro().toPlainString() + "\n\n");
+        }
+
         return buffer.toString();
     }
 }

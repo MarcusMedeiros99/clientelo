@@ -6,6 +6,7 @@ public class CategoriaEstatisticas implements Comparable<CategoriaEstatisticas> 
     private BigDecimal montante;
     private String categoria;
     private Integer qtdVendas;
+    private Pedido pedidoComProdutoMaisCaro;
 
     private CategoriaEstatisticas(String categoria, Integer qtdVendas, BigDecimal montante) {
         this.categoria = categoria;
@@ -38,8 +39,26 @@ public class CategoriaEstatisticas implements Comparable<CategoriaEstatisticas> 
 
     public void adicionaPedido(Pedido pedido) {
         this.qtdVendas += pedido.getQuantidade();
-        this.montante.add(pedido.getPreco());
+        this.montante = this.montante.add(pedido.getPreco());
+
+        if (this.pedidoComProdutoMaisCaro == null ||
+                pedido.getPreco().compareTo(this.pedidoComProdutoMaisCaro.getPreco()) > 0) {
+            this.pedidoComProdutoMaisCaro = pedido;
+        }
+    }
+
+    public String getProdutoMaisCaro() {
+        if (this.pedidoComProdutoMaisCaro != null)
+            return this.pedidoComProdutoMaisCaro.getProduto();
+
+        return null;
     }
 
 
+    public BigDecimal getPrecoMaisCaro() {
+        if (this.pedidoComProdutoMaisCaro != null)
+            return this.pedidoComProdutoMaisCaro.getPreco();
+
+        return null;
+    }
 }
