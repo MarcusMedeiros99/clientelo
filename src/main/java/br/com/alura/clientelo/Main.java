@@ -14,6 +14,7 @@ import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -33,6 +34,9 @@ public class Main {
 
         String[] categoriasProcessadas = new String[10];
         int totalDeCategorias = 0;
+
+        PedidosEstatisticas pedidosEstatisticas = new PedidosEstatisticas();
+        pedidosEstatisticas.addPedidos(pedidos);
 
         for (int i = 0; i < pedidos.length; i++) {
             Pedido pedidoAtual = pedidos[i];
@@ -75,6 +79,8 @@ public class Main {
                 }
             }
         }
+        List<ProdutoEstatisticas> maisVendidos = pedidosEstatisticas.produtosMaisVendidos(3);
+        Relatorio relatorio = new Relatorio(pedidosEstatisticas);
 
         logger.info("##### RELATÓRIO DE VALORES TOTAIS #####");
         logger.info("TOTAL DE PEDIDOS REALIZADOS: {}", totalDePedidosRealizados);
@@ -83,6 +89,12 @@ public class Main {
         logger.info("MONTANTE DE VENDAS: {}", NumberFormat.getCurrencyInstance(new Locale("pt", "BR")).format(montanteDeVendas.setScale(2, RoundingMode.HALF_DOWN)));
         logger.info("PEDIDO MAIS BARATO: {} ({})", NumberFormat.getCurrencyInstance(new Locale("pt", "BR")).format(pedidoMaisBarato.getPreco().multiply(new BigDecimal(pedidoMaisBarato.getQuantidade())).setScale(2, RoundingMode.HALF_DOWN)), pedidoMaisBarato.getProduto());
         logger.info("PEDIDO MAIS CARO: {} ({})\n", NumberFormat.getCurrencyInstance(new Locale("pt", "BR")).format(pedidoMaisCaro.getPreco().multiply(new BigDecimal(pedidoMaisCaro.getQuantidade())).setScale(2, RoundingMode.HALF_DOWN)), pedidoMaisCaro.getProduto());
+
+//        logger.info("PRODUTO MAIS VENDIDO: {}", maisVendidos.get(0));
+//        logger.info("2º PRODUTO MAIS VENDIDO: {}", maisVendidos.get(1));
+//        logger.info("3º PRODUTO MAIS VENDIDO: {}", maisVendidos.get(2));
+        logger.info(relatorio.produtosMaisVendidos(3));
         logger.info("### FIM DO RELATÓRIO ###");
+
     }
 }
