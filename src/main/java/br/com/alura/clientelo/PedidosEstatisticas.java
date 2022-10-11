@@ -5,14 +5,18 @@ import java.util.*;
 public class PedidosEstatisticas {
     private final Set<ProdutoEstatisticas> produtosEstatisticas;
     private final Map<String, ProdutoEstatisticas> produtos;
-    private final Map<String, CategoriaEstatisticas> categoriasEstatisticas;
     private final Set<String> categorias;
+    private final Map<String, CategoriaEstatisticas> categoriasEstatisticas;
+    private final Set<String> clientes;
+    private final Map<String, ClienteEstatisticas> clientesEstatisticas;
 
     public PedidosEstatisticas() {
         this.produtosEstatisticas = new TreeSet<>();
+        this.produtos = new HashMap<>();
         this.categoriasEstatisticas = new HashMap<>();
-        produtos = new HashMap<>();
-        categorias = new TreeSet<>();
+        this.categorias = new TreeSet<>();
+        this.clientesEstatisticas = new HashMap<>();
+        this.clientes = new TreeSet<>();
     }
 
     public void addPedidos(Pedido[] pedidos) {
@@ -21,11 +25,32 @@ public class PedidosEstatisticas {
             if (pedido != null)  {
                 String produto = pedido.getProduto();
                 String categoria = pedido.getCategoria();
+                String cliente = pedido.getCliente();
                 insertProduto(pedido, produto);
-
                 insertCategoria(pedido, categoria);
+                insertCliente(pedido, cliente);
             }
         }
+    }
+
+    private void insertCliente(Pedido pedido, String cliente) {
+        if (!clientes.contains(cliente)) {
+            insertNovoCliente(pedido, cliente);
+        }
+        else {
+            updateCliente(pedido, cliente);
+        }
+    }
+
+    private void updateCliente(Pedido pedido, String cliente) {
+        ClienteEstatisticas clienteEstatisticas = clientesEstatisticas.get(cliente);
+        clienteEstatisticas.adicionaPedido(pedido);
+    }
+
+    private void insertNovoCliente(Pedido pedido, String cliente) {
+        ClienteEstatisticas clienteEstatisticas = new ClienteEstatisticas(pedido);
+        clientes.add(cliente);
+        clientesEstatisticas.put(cliente, clienteEstatisticas);
     }
 
     private void insertCategoria(Pedido pedido, String categoria) {
@@ -86,4 +111,11 @@ public class PedidosEstatisticas {
         return answer;
     }
 
+    public List<ClienteEstatisticas> vendasPorCliente() {
+        List<ClienteEstatisticas> answer = new ArrayList<>();
+        for (String cliente: clientes) {
+            answer.add(clientesEstatisticas.get(cliente));
+        }
+        return answer;
+    }
 }

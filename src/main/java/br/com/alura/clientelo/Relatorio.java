@@ -46,4 +46,16 @@ public class Relatorio {
 
         return buffer.toString();
     }
+
+    public String pedidosPorCliente() {
+        StringBuffer buffer = new StringBuffer("\nVENDAS POR CLIENTE\n");
+        List<ClienteEstatisticas> clientes = pedidosEstatisticas.vendasPorCliente();
+
+        for (int i = 0; i < clientes.size(); i++) {
+            ClienteEstatisticas cliente = clientes.get(i);
+            buffer.append("Nº DE PEDIDOS: " + cliente.getQtdPedidos() + "\n");
+            buffer.append("NOME: " + cliente.getNome() + "\n\n");
+        }
+        return buffer.toString();
+    }
 }

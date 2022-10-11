@@ -32,14 +32,6 @@ public class ProdutoEstatisticas implements Comparable<ProdutoEstatisticas> {
         this.qtdDeVendas += n;
     }
 
-    @Override
-    public String toString() {
-        return "ProdutoEstatisticas{" +
-                "produto='" + produto + '\'' +
-                ", qtdDeVendas=" + qtdDeVendas +
-                ", categoria='" + categoria + '\'' +
-                '}';
-    }
 
     @Override
     public int compareTo(ProdutoEstatisticas produtoEstatisticas) {

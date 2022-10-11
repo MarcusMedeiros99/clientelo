@@ -79,7 +79,6 @@ public class Main {
                 }
             }
         }
-        List<ProdutoEstatisticas> maisVendidos = pedidosEstatisticas.produtosMaisVendidos(3);
         Relatorio relatorio = new Relatorio(pedidosEstatisticas);
 
         logger.info("##### RELATÓRIO DE VALORES TOTAIS #####");
@@ -93,6 +92,7 @@ public class Main {
         logger.info(relatorio.produtosMaisVendidos(3));
         logger.info(relatorio.vendasPorCategoria());
         logger.info(relatorio.maisCaroPorCategoria());
+        logger.info(relatorio.pedidosPorCliente());
         logger.info("### FIM DO RELATÓRIO ###");
 
     }
