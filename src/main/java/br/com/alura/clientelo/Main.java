@@ -93,6 +93,7 @@ public class Main {
         logger.info(relatorio.vendasPorCategoria());
         logger.info(relatorio.maisCaroPorCategoria());
         logger.info(relatorio.pedidosPorCliente());
+        logger.info(relatorio.clientesMaisLucrativos());
         logger.info("### FIM DO RELATÓRIO ###");
 
     }

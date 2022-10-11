@@ -58,4 +58,16 @@ public class Relatorio {
         }
         return buffer.toString();
     }
+
+    public String clientesMaisLucrativos() { StringBuffer buffer = new StringBuffer("\nCLIENTES MAIS LUCRATIVOS\n");
+        List<ClienteEstatisticas> clientes = pedidosEstatisticas.clientesMaisLucrativos(2);
+
+        for (int i = 0; i < clientes.size(); i++) {
+            ClienteEstatisticas cliente = clientes.get(i);
+            buffer.append("NOME: " + cliente.getNome() + "\n");
+            buffer.append("Nº DE PEDIDOS: " + cliente.getQtdPedidos() + "\n");
+            buffer.append("NOME: " + cliente.getMontanteGasto() + "\n\n");
+        }
+        return buffer.toString();
+    }
 }
