@@ -8,10 +8,10 @@ public class ClienteEstatisticas implements Comparable<ClienteEstatisticas> {
     private Integer qtdPedidos;
     private BigDecimal montanteGasto;
 
-    private ClienteEstatisticas(String nome, Integer qtdPedidos, BigDecimal montanteGasto) {
+    private ClienteEstatisticas(String nome, Integer qtd, BigDecimal montanteGasto) {
         this.nome = nome;
-        this.qtdPedidos = qtdPedidos;
-        this.montanteGasto = montanteGasto;
+        this.qtdPedidos = 1;
+        this.montanteGasto = montanteGasto.multiply(BigDecimal.valueOf(qtd));
     }
 
     public ClienteEstatisticas(Pedido pedido) {
@@ -31,8 +31,12 @@ public class ClienteEstatisticas implements Comparable<ClienteEstatisticas> {
     }
 
     public void adicionaPedido(Pedido pedido) {
-        this.qtdPedidos += pedido.getQuantidade();
-        this.montanteGasto = this.montanteGasto.add(pedido.getPreco());
+        this.qtdPedidos += 1;
+        this.montanteGasto = this.montanteGasto
+                .add(
+                        pedido.getPreco()
+                                .multiply(BigDecimal.valueOf(pedido.getQuantidade()))
+                );
     }
 
     @Override

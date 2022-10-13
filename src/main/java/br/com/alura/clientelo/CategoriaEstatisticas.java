@@ -16,6 +16,7 @@ public class CategoriaEstatisticas implements Comparable<CategoriaEstatisticas> 
 
     public CategoriaEstatisticas(Pedido pedido) {
         this(pedido.getCategoria(), pedido.getQuantidade(), pedido.getPreco());
+        this.pedidoComProdutoMaisCaro = pedido;
     }
 
     public String getCategoria() {

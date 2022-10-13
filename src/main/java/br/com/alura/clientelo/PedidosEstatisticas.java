@@ -103,16 +103,9 @@ public class PedidosEstatisticas {
     }
 
     public List<ProdutoEstatisticas> produtosMaisVendidos(int n) {
-        List<ProdutoEstatisticas> maisVendidos = new ArrayList<>(n);
-
-        Iterator<ProdutoEstatisticas> iterator = produtos.iterator();
-        int i = 0;
-        while (iterator.hasNext() && i < n) {
-            maisVendidos.add(iterator.next());
-            i++;
-        }
-
-        return maisVendidos;
+        return produtos.stream()
+                .limit(n)
+                .toList();
     }
 
     public List<CategoriaEstatisticas> vendasPorCategoria() {
@@ -122,26 +115,27 @@ public class PedidosEstatisticas {
     }
 
     public List<ClienteEstatisticas> vendasPorCliente() {
-
-        List<ClienteEstatisticas> answer = new ArrayList<>();
-        for (ClienteEstatisticas cliente: clientes) {
-            answer.add(clienteToEstatisticas.get(cliente.getNome()));
-        }
-        return answer;
+        return clientes.stream()
+                .map(cliente -> clienteToEstatisticas.get(cliente.getNome()))
+                .toList();
     }
 
     public List<ClienteEstatisticas> clientesMaisLucrativos(int n) {
-        List<ClienteEstatisticas> maisLucrativos = new ArrayList<>(n);
-
-        Iterator<ClienteEstatisticas> iterator = clientesMaisLucrativos.iterator();
-        int i = 0;
-        while (iterator.hasNext() && i < n) {
-            maisLucrativos.add(iterator.next());
-            i++;
-        }
-
-        maisLucrativos.sort(Comparator.comparing(ClienteEstatisticas::getNome));
-
-        return maisLucrativos;
+        return clientesMaisLucrativos.stream()
+                .limit(n)
+                .sorted(Comparator.comparing(ClienteEstatisticas::getNome))
+                .toList();
+//        List<ClienteEstatisticas> maisLucrativos = new ArrayList<>(n);
+//
+//        Iterator<ClienteEstatisticas> iterator = clientesMaisLucrativos.iterator();
+//        int i = 0;
+//        while (iterator.hasNext() && i < n) {
+//            maisLucrativos.add(iterator.next());
+//            i++;
+//        }
+//
+//        maisLucrativos.sort(Comparator.comparing(ClienteEstatisticas::getNome));
+//
+//        return maisLucrativos;
     }
 }
