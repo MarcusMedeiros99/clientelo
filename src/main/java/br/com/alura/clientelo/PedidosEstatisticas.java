@@ -125,17 +125,5 @@ public class PedidosEstatisticas {
                 .limit(n)
                 .sorted(Comparator.comparing(ClienteEstatisticas::getNome))
                 .toList();
-//        List<ClienteEstatisticas> maisLucrativos = new ArrayList<>(n);
-//
-//        Iterator<ClienteEstatisticas> iterator = clientesMaisLucrativos.iterator();
-//        int i = 0;
-//        while (iterator.hasNext() && i < n) {
-//            maisLucrativos.add(iterator.next());
-//            i++;
-//        }
-//
-//        maisLucrativos.sort(Comparator.comparing(ClienteEstatisticas::getNome));
-//
-//        return maisLucrativos;
     }
 }
