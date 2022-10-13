@@ -25,17 +25,18 @@ public class PedidosEstatisticas {
     }
 
     public void addPedidos(Pedido[] pedidos) {
-        for (Pedido pedido:
-             pedidos) {
-            if (pedido != null)  {
-                String produto = pedido.getProduto();
-                String categoria = pedido.getCategoria();
-                String cliente = pedido.getCliente();
-                insertProduto(pedido, produto);
-                insertCategoria(pedido, categoria);
-                insertCliente(pedido, cliente);
-            }
-        }
+        List<Pedido> pedidosList = Arrays.asList(pedidos);
+
+        pedidosList
+                .stream()
+                .filter(pedido -> pedido != null)
+                .forEach((this::addPedido));
+    }
+
+    public void addPedido(Pedido pedido) {
+        insertProduto(pedido, pedido.getProduto());
+        insertCategoria(pedido, pedido.getCategoria());
+        insertCliente(pedido, pedido.getCliente());
     }
 
     private void insertCliente(Pedido pedido, String cliente) {
@@ -115,15 +116,13 @@ public class PedidosEstatisticas {
     }
 
     public List<CategoriaEstatisticas> vendasPorCategoria() {
-        List<CategoriaEstatisticas> answer = new ArrayList<>();
-        for (String categoria :
-                categorias) {
-            answer.add(categoriaToEstatisticas.get(categoria));
-        }
-        return answer;
+        return categorias.stream()
+                .map(categoriaToEstatisticas::get)
+                .toList();
     }
 
     public List<ClienteEstatisticas> vendasPorCliente() {
+
         List<ClienteEstatisticas> answer = new ArrayList<>();
         for (ClienteEstatisticas cliente: clientes) {
             answer.add(clienteToEstatisticas.get(cliente.getNome()));
