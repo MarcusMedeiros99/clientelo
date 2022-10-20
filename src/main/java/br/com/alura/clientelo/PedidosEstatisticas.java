@@ -1,10 +1,11 @@
 package br.com.alura.clientelo;
 
+import br.com.alura.clientelo.repositories.ProdutoEstatisticasRepository;
+
 import java.util.*;
 
 public class PedidosEstatisticas {
-    private final Set<ProdutoEstatisticas> produtos;
-    private final Map<String, ProdutoEstatisticas> produtoToEstatisticas;
+    private final ProdutoEstatisticasRepository produtos;
     private final Set<String> categorias;
     private final Map<String, CategoriaEstatisticas> categoriaToEstatisticas;
     private final Set<ClienteEstatisticas> clientes;
@@ -12,8 +13,7 @@ public class PedidosEstatisticas {
     private final Set<ClienteEstatisticas> clientesMaisLucrativos;
 
     public PedidosEstatisticas() {
-        this.produtos = new TreeSet<>();
-        this.produtoToEstatisticas = new HashMap<>();
+        this.produtos = new ProdutoEstatisticasRepository();
         this.categoriaToEstatisticas = new HashMap<>();
         this.categorias = new TreeSet<>();
         this.clienteToEstatisticas = new HashMap<>();
@@ -34,7 +34,7 @@ public class PedidosEstatisticas {
     }
 
     public void addPedido(Pedido pedido) {
-        insertProduto(pedido, pedido.getProduto());
+        produtos.insert(pedido);
         insertCategoria(pedido, pedido.getCategoria());
         insertCliente(pedido, pedido.getCliente());
     }
@@ -86,24 +86,10 @@ public class PedidosEstatisticas {
         categoriaToEstatisticas.put(categoria, categoriaEstatisticas);
     }
 
-    private void insertProduto(Pedido pedido, String produto) {
-        if (!produtoToEstatisticas.containsKey(produto)) insertNovoProduto(pedido, produto);
-        else updateProduto(pedido, produto);
-    }
-
-    private void updateProduto(Pedido pedido, String produto) {
-        ProdutoEstatisticas produtoEstatisticas = produtoToEstatisticas.get(produto);
-        produtoEstatisticas.adicionaNVendas(pedido.getQuantidade());
-    }
-
-    private void insertNovoProduto(Pedido pedido, String produto) {
-        ProdutoEstatisticas produtoEstatisticas = new ProdutoEstatisticas(pedido);
-        produtos.add(produtoEstatisticas);
-        produtoToEstatisticas.put(produto, produtoEstatisticas);
-    }
 
     public List<ProdutoEstatisticas> produtosMaisVendidos(int n) {
-        return produtos.stream()
+        return produtos.getAll()
+                .stream()
                 .limit(n)
                 .toList();
     }
