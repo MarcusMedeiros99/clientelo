@@ -1,9 +1,20 @@
 package br.com.alura.clientelo;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.List;
 
 public class Relatorio {
     private PedidosEstatisticas pedidosEstatisticas;
+    private static DecimalFormat decimalFormatter;
+
+    static {
+        decimalFormatter = new DecimalFormat();
+        DecimalFormatSymbols dfs = decimalFormatter.getDecimalFormatSymbols();
+        dfs.setDecimalSeparator(',');
+        dfs.setGroupingSeparator('.');
+        decimalFormatter.applyPattern("R$ #,###.00");
+    }
 
     public Relatorio(PedidosEstatisticas pedidosEstatisticas) {
         this.pedidosEstatisticas = pedidosEstatisticas;
@@ -28,7 +39,7 @@ public class Relatorio {
             CategoriaEstatisticas categoria = categorias.get(i);
             buffer.append("CATEGORIA: " + categoria.getCategoria() + "\n");
             buffer.append("QUANTIDADE VENDIDA: " + categoria.getQtdVendas() + "\n");
-            buffer.append("MONTANTE: " + categoria.getMontante() + "\n\n");
+            buffer.append("MONTANTE: " + decimalFormatter.format(categoria.getMontante()) + "\n\n");
         }
         return buffer.toString();
     }
@@ -41,7 +52,7 @@ public class Relatorio {
             CategoriaEstatisticas categoria = categorias.get(i);
             buffer.append("CATEGORIA: " + categoria.getCategoria() + "\n");
             buffer.append("PRODUTO: " + categoria.getProdutoMaisCaro() + "\n");
-            buffer.append("PREÇO: " + categoria.getPrecoMaisCaro().toPlainString() + "\n\n");
+            buffer.append("PREÇO: " + decimalFormatter.format(categoria.getPrecoMaisCaro()) + "\n\n");
         }
 
         return buffer.toString();
@@ -66,7 +77,7 @@ public class Relatorio {
             ClienteEstatisticas cliente = clientes.get(i);
             buffer.append("NOME: " + cliente.getNome() + "\n");
             buffer.append("Nº DE PEDIDOS: " + cliente.getQtdPedidos() + "\n");
-            buffer.append("NOME: " + cliente.getMontanteGasto() + "\n\n");
+            buffer.append("NOME: " + decimalFormatter.format(cliente.getMontanteGasto()) + "\n\n");
         }
         return buffer.toString();
     }
