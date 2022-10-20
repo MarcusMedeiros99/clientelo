@@ -28,10 +28,9 @@ public class ProdutoEstatisticas implements Comparable<ProdutoEstatisticas> {
         return categoria;
     }
 
-    public void adicionaNVendas(int n) {
-        this.qtdDeVendas += n;
+    public void adicionaPedido(Pedido pedido) {
+        this.qtdDeVendas += pedido.getQuantidade();
     }
-
 
     @Override
     public int compareTo(ProdutoEstatisticas produtoEstatisticas) {

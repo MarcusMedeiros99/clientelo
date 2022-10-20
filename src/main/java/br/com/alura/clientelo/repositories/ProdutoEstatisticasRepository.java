@@ -28,7 +28,7 @@ public class ProdutoEstatisticasRepository implements EstatisticasRepository<Pro
 
     private void updateProduto(String produto, Pedido pedido) {
         ProdutoEstatisticas produtoEstatisticas = produtoToEstatisticas.get(produto);
-        produtoEstatisticas.adicionaNVendas(pedido.getQuantidade());
+        produtoEstatisticas.adicionaPedido(pedido);
     }
 
     private void insertNovoProduto(String produto, Pedido pedido) {
