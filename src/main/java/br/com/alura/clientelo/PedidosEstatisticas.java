@@ -1,27 +1,24 @@
 package br.com.alura.clientelo;
 
+import br.com.alura.clientelo.repositories.CategoriaEstatisticasRepository;
+import br.com.alura.clientelo.repositories.ClienteEstatisticasRepository;
 import br.com.alura.clientelo.repositories.ProdutoEstatisticasRepository;
 
 import java.util.*;
 
 public class PedidosEstatisticas {
     private final ProdutoEstatisticasRepository produtos;
-    private final Set<String> categorias;
-    private final Map<String, CategoriaEstatisticas> categoriaToEstatisticas;
-    private final Set<ClienteEstatisticas> clientes;
-    private final Map<String, ClienteEstatisticas> clienteToEstatisticas;
-    private final Set<ClienteEstatisticas> clientesMaisLucrativos;
+    private final CategoriaEstatisticasRepository categorias;
+    private final ClienteEstatisticasRepository clientes;
+    private final ClienteEstatisticasRepository clientesMaisLucrativos;
 
     public PedidosEstatisticas() {
         this.produtos = new ProdutoEstatisticasRepository();
-        this.categoriaToEstatisticas = new HashMap<>();
-        this.categorias = new TreeSet<>();
-        this.clienteToEstatisticas = new HashMap<>();
-        this.clientes = new TreeSet<>();
-        this.clientesMaisLucrativos = new TreeSet<>(
+        this.categorias = new CategoriaEstatisticasRepository();
+        this.clientes = new ClienteEstatisticasRepository();
+        this.clientesMaisLucrativos = new ClienteEstatisticasRepository(
                 Comparator.comparing(ClienteEstatisticas::getMontanteGasto)
-                        .reversed()
-                        .thenComparing(ClienteEstatisticas::getNome));
+                        .reversed());
     }
 
     public void addPedidos(Pedido[] pedidos) {
@@ -35,55 +32,9 @@ public class PedidosEstatisticas {
 
     public void addPedido(Pedido pedido) {
         produtos.insert(pedido);
-        insertCategoria(pedido, pedido.getCategoria());
-        insertCliente(pedido, pedido.getCliente());
-    }
-
-    private void insertCliente(Pedido pedido, String cliente) {
-        if (!clienteToEstatisticas.containsKey(cliente)) {
-            insertNovoCliente(pedido, cliente);
-        }
-        else {
-            updateCliente(pedido, cliente);
-        }
-    }
-
-    private void updateCliente(Pedido pedido, String cliente) {
-        ClienteEstatisticas clienteEstatisticas = clienteToEstatisticas.get(cliente);
-        clientes.remove(clienteEstatisticas);
-        clientesMaisLucrativos.remove(clienteEstatisticas);
-        
-        clienteEstatisticas.adicionaPedido(pedido);
-        
-        clientes.add(clienteEstatisticas);
-        clientesMaisLucrativos.add(clienteEstatisticas);
-    }
-
-    private void insertNovoCliente(Pedido pedido, String cliente) {
-        ClienteEstatisticas clienteEstatisticas = new ClienteEstatisticas(pedido);
-        clientes.add(clienteEstatisticas);
-        clientesMaisLucrativos.add(clienteEstatisticas);
-        clienteToEstatisticas.put(cliente, clienteEstatisticas);
-    }
-
-    private void insertCategoria(Pedido pedido, String categoria) {
-        if (!categorias.contains(categoria)) {
-            insertNovaCategoria(pedido, categoria);
-        }
-        else {
-            updateCategoria(pedido, categoria);
-        }
-    }
-
-    private void updateCategoria(Pedido pedido, String categoria) {
-        CategoriaEstatisticas categoriaEstatisticas = categoriaToEstatisticas.get(categoria);
-        categoriaEstatisticas.adicionaPedido(pedido);
-    }
-
-    private void insertNovaCategoria(Pedido pedido, String categoria) {
-        CategoriaEstatisticas categoriaEstatisticas = new CategoriaEstatisticas(pedido);
-        categorias.add(categoria);
-        categoriaToEstatisticas.put(categoria, categoriaEstatisticas);
+        categorias.insert(pedido);
+        clientes.insert(pedido);
+        clientesMaisLucrativos.insert(pedido);
     }
 
 
@@ -95,19 +46,17 @@ public class PedidosEstatisticas {
     }
 
     public List<CategoriaEstatisticas> vendasPorCategoria() {
-        return categorias.stream()
-                .map(categoriaToEstatisticas::get)
+        return categorias.getAll().stream()
                 .toList();
     }
 
     public List<ClienteEstatisticas> vendasPorCliente() {
-        return clientes.stream()
-                .map(cliente -> clienteToEstatisticas.get(cliente.getNome()))
+        return clientes.getAll().stream()
                 .toList();
     }
 
     public List<ClienteEstatisticas> clientesMaisLucrativos(int n) {
-        return clientesMaisLucrativos.stream()
+        return clientesMaisLucrativos.getAll().stream()
                 .limit(n)
                 .sorted(Comparator.comparing(ClienteEstatisticas::getNome))
                 .toList();

@@ -1,6 +1,7 @@
 package br.com.alura.clientelo;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.Objects;
 
 public class ClienteEstatisticas implements Comparable<ClienteEstatisticas> {
@@ -42,9 +43,16 @@ public class ClienteEstatisticas implements Comparable<ClienteEstatisticas> {
     @Override
     public int compareTo(ClienteEstatisticas clienteEstatisticas) {
         if (clienteEstatisticas != null) {
-            if (this.qtdPedidos.equals(clienteEstatisticas.qtdPedidos)) return this.nome.compareTo(clienteEstatisticas.nome);
-            return -this.qtdPedidos.compareTo(clienteEstatisticas.qtdPedidos);
+            int result = -Integer.compare(qtdPedidos,clienteEstatisticas.qtdPedidos);
+            if (result == 0) return this.nome.compareTo(clienteEstatisticas.nome);
+
+//            return result;
+
+            return Comparator.comparing(ClienteEstatisticas::getQtdPedidos).reversed()
+                    .thenComparing(ClienteEstatisticas::getNome)
+                    .compare(this, clienteEstatisticas);
         }
+
 
         throw new NullPointerException();
     }
