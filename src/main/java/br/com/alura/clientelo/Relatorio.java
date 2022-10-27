@@ -5,7 +5,7 @@ import java.text.DecimalFormatSymbols;
 import java.util.List;
 
 public class Relatorio {
-    private PedidosEstatisticas pedidosEstatisticas;
+    private EstatisticasService estatisticasService;
     private static DecimalFormat decimalFormatter;
 
     static {
@@ -16,13 +16,13 @@ public class Relatorio {
         decimalFormatter.applyPattern("R$ #,###.00");
     }
 
-    public Relatorio(PedidosEstatisticas pedidosEstatisticas) {
-        this.pedidosEstatisticas = pedidosEstatisticas;
+    public Relatorio(EstatisticasService estatisticasService) {
+        this.estatisticasService = estatisticasService;
     }
 
     public String produtosMaisVendidos(int n) {
         StringBuffer buffer = new StringBuffer("\n");
-        List<ProdutoEstatisticas> produtos = pedidosEstatisticas.produtosMaisVendidos(n);
+        List<ProdutoEstatisticas> produtos = estatisticasService.produtosMaisVendidos(n);
 
         for (int i = 0; i < n; i++) {
             ProdutoEstatisticas produto = produtos.get(i);
@@ -33,10 +33,9 @@ public class Relatorio {
 
     public String vendasPorCategoria() {
         StringBuffer buffer = new StringBuffer("\nVENDAS POR CATEGORIA\n");
-        List<CategoriaEstatisticas> categorias = pedidosEstatisticas.vendasPorCategoria();
+        List<CategoriaEstatisticas> categorias = estatisticasService.vendasPorCategoria();
 
-        for (int i = 0; i < categorias.size(); i++) {
-            CategoriaEstatisticas categoria = categorias.get(i);
+        for (CategoriaEstatisticas categoria : categorias) {
             buffer.append("CATEGORIA: " + categoria.getCategoria() + "\n");
             buffer.append("QUANTIDADE VENDIDA: " + categoria.getQtdVendas() + "\n");
             buffer.append("MONTANTE: " + decimalFormatter.format(categoria.getMontante()) + "\n\n");
@@ -46,10 +45,9 @@ public class Relatorio {
 
     public String maisCaroPorCategoria() {
         StringBuffer buffer = new StringBuffer("\nMAIS CARO POR CATEGORIA\n");
-        List<CategoriaEstatisticas> categorias = pedidosEstatisticas.vendasPorCategoria();
+        List<CategoriaEstatisticas> categorias = estatisticasService.vendasPorCategoria();
 
-        for (int i = 0; i < categorias.size(); i++) {
-            CategoriaEstatisticas categoria = categorias.get(i);
+        for (CategoriaEstatisticas categoria : categorias) {
             buffer.append("CATEGORIA: " + categoria.getCategoria() + "\n");
             buffer.append("PRODUTO: " + categoria.getProdutoMaisCaro() + "\n");
             buffer.append("PREÇO: " + decimalFormatter.format(categoria.getPrecoMaisCaro()) + "\n\n");
@@ -60,25 +58,50 @@ public class Relatorio {
 
     public String pedidosPorCliente() {
         StringBuffer buffer = new StringBuffer("\nVENDAS POR CLIENTE\n");
-        List<ClienteEstatisticas> clientes = pedidosEstatisticas.vendasPorCliente();
+        List<ClienteEstatisticas> clientes = estatisticasService.vendasPorCliente();
 
-        for (int i = 0; i < clientes.size(); i++) {
-            ClienteEstatisticas cliente = clientes.get(i);
+        for (ClienteEstatisticas cliente : clientes) {
             buffer.append("Nº DE PEDIDOS: " + cliente.getQtdPedidos() + "\n");
             buffer.append("NOME: " + cliente.getNome() + "\n\n");
         }
         return buffer.toString();
     }
 
-    public String clientesMaisLucrativos() { StringBuffer buffer = new StringBuffer("\nCLIENTES MAIS LUCRATIVOS\n");
-        List<ClienteEstatisticas> clientes = pedidosEstatisticas.clientesMaisLucrativos(2);
+    public String clientesMaisLucrativos() {
+        StringBuffer buffer = new StringBuffer("\nCLIENTES MAIS LUCRATIVOS\n");
+        List<ClienteEstatisticas> clientes = estatisticasService.clientesMaisLucrativos(2);
 
-        for (int i = 0; i < clientes.size(); i++) {
-            ClienteEstatisticas cliente = clientes.get(i);
+        for (ClienteEstatisticas cliente : clientes) {
             buffer.append("NOME: " + cliente.getNome() + "\n");
             buffer.append("Nº DE PEDIDOS: " + cliente.getQtdPedidos() + "\n");
-            buffer.append("NOME: " + decimalFormatter.format(cliente.getMontanteGasto()) + "\n\n");
+            buffer.append("VALOR GASTO: " + decimalFormatter.format(cliente.getMontanteGasto()) + "\n\n");
         }
         return buffer.toString();
+    }
+
+    public String totalDePedidos() {
+        return "TOTAL DE PEDIDOS REALIZADOS: " + estatisticasService.totalDePedidos();
+    }
+
+    public String totalDeProdutosVendidos() {
+        return "TOTAL DE PRODUTOS VENDIDOS: " + estatisticasService.totalDeProdutosVendidos();
+    }
+
+    public String totalDeCategorias() {
+        return "TOTAL DE CATEGORIAS: " + estatisticasService.totalDeCategorias();
+    }
+
+    public String montanteDeVendas() {
+        return "MONTANTE DE VENDAS: " +  decimalFormatter.format(estatisticasService.montanteTotal());
+    }
+
+    public String pedidoMaisBarato() {
+        Pedido maisBarato = estatisticasService.pedidoMaisBarato().get();
+        return "PEDIDO MAIS BARATO: " + decimalFormatter.format(maisBarato.getValorTotal()) + " (" + maisBarato.getProduto() + ")";
+    }
+
+    public String pedidoMaisCaro() {
+        Pedido maisCaro = estatisticasService.pedidoMaisCaro().get();
+        return "PEDIDO MAIS BARATO: " + decimalFormatter.format(maisCaro.getValorTotal()) + " (" + maisCaro.getProduto() + ")";
     }
 }

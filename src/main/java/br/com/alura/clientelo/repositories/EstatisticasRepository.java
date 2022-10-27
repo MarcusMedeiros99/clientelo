@@ -11,4 +11,7 @@ public interface EstatisticasRepository<T> {
 
     void insert(Pedido pedido);
 
+    default int size() {
+        return getAll().size();
+    }
 }

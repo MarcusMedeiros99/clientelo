@@ -7,12 +7,13 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class PedidosEstatisticasTest {
+public class EstatisticasServiceTest {
 
-    private PedidosEstatisticas pedidosEstatisticas;
+    private EstatisticasService estatisticasService;
     private static Pedido[] umPedido;
     private static Pedido[] pedidos;
     private static Pedido[] tresPedidosUmCliente;
@@ -41,20 +42,20 @@ public class PedidosEstatisticasTest {
 
     @BeforeEach
     void beforeEach() {
-        pedidosEstatisticas = new PedidosEstatisticas();
+        estatisticasService = new EstatisticasService();
     }
 
     @Test
     void shouldGenerateEmptyVendasPorCategoriaWhenEmptyOrderList() {
-        List<CategoriaEstatisticas> vendasPorCategoria = pedidosEstatisticas.vendasPorCategoria();
+        List<CategoriaEstatisticas> vendasPorCategoria = estatisticasService.vendasPorCategoria();
 
         assertEquals(vendasPorCategoria.size(), 0);
     }
 
     @Test
     void shouldGenerateVendasPorCategoria() {
-        pedidosEstatisticas.addPedidos(pedidos);
-        List<CategoriaEstatisticas> vendasPorCategoria = pedidosEstatisticas.vendasPorCategoria();
+        estatisticasService.addPedidos(pedidos);
+        List<CategoriaEstatisticas> vendasPorCategoria = estatisticasService.vendasPorCategoria();
 
         assertEquals(vendasPorCategoria.size(),5);
 
@@ -81,8 +82,8 @@ public class PedidosEstatisticasTest {
 
     @Test
     void shouldGenerateMaisVendidos() {
-        pedidosEstatisticas.addPedidos(pedidos);
-        List<ProdutoEstatisticas> maisVendidos = pedidosEstatisticas.produtosMaisVendidos(3);
+        estatisticasService.addPedidos(pedidos);
+        List<ProdutoEstatisticas> maisVendidos = estatisticasService.produtosMaisVendidos(3);
 
         assertEquals(maisVendidos.size(), 3);
 
@@ -98,8 +99,8 @@ public class PedidosEstatisticasTest {
 
     @Test
     void shouldGenerateMaisVendidosFromOneOrder() {
-        pedidosEstatisticas.addPedidos(umPedido);
-        List<ProdutoEstatisticas> maisVendidos = pedidosEstatisticas.produtosMaisVendidos(3);
+        estatisticasService.addPedidos(umPedido);
+        List<ProdutoEstatisticas> maisVendidos = estatisticasService.produtosMaisVendidos(3);
 
         assertEquals(maisVendidos.size(), 1);
 
@@ -109,8 +110,8 @@ public class PedidosEstatisticasTest {
 
     @Test
     void shouldGenerateMaisCarosPorCategoria() {
-        pedidosEstatisticas.addPedidos(pedidos);
-        List<CategoriaEstatisticas> vendasPorCategoria = pedidosEstatisticas.vendasPorCategoria();
+        estatisticasService.addPedidos(pedidos);
+        List<CategoriaEstatisticas> vendasPorCategoria = estatisticasService.vendasPorCategoria();
 
         assertEquals(vendasPorCategoria.size(), 5);
 
@@ -137,8 +138,8 @@ public class PedidosEstatisticasTest {
 
     @Test
     void shouldGenerateMaisCarosPorPedidoFromOneOrder() {
-        pedidosEstatisticas.addPedidos(umPedido);
-        List<CategoriaEstatisticas> vendasPorCategoria = pedidosEstatisticas.vendasPorCategoria();
+        estatisticasService.addPedidos(umPedido);
+        List<CategoriaEstatisticas> vendasPorCategoria = estatisticasService.vendasPorCategoria();
 
         assertEquals(vendasPorCategoria.size(), 1);
 
@@ -148,8 +149,8 @@ public class PedidosEstatisticasTest {
 
     @Test
     void shouldGenerateVendasPorCliente() {
-        pedidosEstatisticas.addPedidos(pedidos);
-        List<ClienteEstatisticas> vendasPorCliente = pedidosEstatisticas.vendasPorCliente();
+        estatisticasService.addPedidos(pedidos);
+        List<ClienteEstatisticas> vendasPorCliente = estatisticasService.vendasPorCliente();
 
         assertEquals(vendasPorCliente.size(), 6);
 
@@ -174,8 +175,8 @@ public class PedidosEstatisticasTest {
 
     @Test
     void shouldGenerateVendasPorClienteWhen3PedidosAnd1Cliente() {
-        pedidosEstatisticas.addPedidos(tresPedidosUmCliente);
-        List<ClienteEstatisticas> vendasPorCliente = pedidosEstatisticas.vendasPorCliente();
+        estatisticasService.addPedidos(tresPedidosUmCliente);
+        List<ClienteEstatisticas> vendasPorCliente = estatisticasService.vendasPorCliente();
 
         assertEquals(vendasPorCliente.size(), 1);
 
@@ -185,8 +186,8 @@ public class PedidosEstatisticasTest {
 
     @Test
     void shouldGenerateClientesMaisLucrativos() {
-        pedidosEstatisticas.addPedidos(pedidos);
-        List<ClienteEstatisticas> vendasPorCliente = pedidosEstatisticas.clientesMaisLucrativos(2);
+        estatisticasService.addPedidos(pedidos);
+        List<ClienteEstatisticas> vendasPorCliente = estatisticasService.clientesMaisLucrativos(2);
 
         assertEquals(vendasPorCliente.size(), 2);
 
@@ -202,8 +203,8 @@ public class PedidosEstatisticasTest {
 
     @Test
     void shouldGenerateClientesMaisLucrativosWhen3PedidosAnd1Cliente() {
-        pedidosEstatisticas.addPedidos(tresPedidosUmCliente);
-        List<ClienteEstatisticas> clientesMaisLucrativos = pedidosEstatisticas.clientesMaisLucrativos(2);
+        estatisticasService.addPedidos(tresPedidosUmCliente);
+        List<ClienteEstatisticas> clientesMaisLucrativos = estatisticasService.clientesMaisLucrativos(2);
 
         assertEquals(clientesMaisLucrativos.size(), 1);
 
@@ -211,5 +212,53 @@ public class PedidosEstatisticasTest {
         assertEquals(clientesMaisLucrativos.get(0).getNome(), "cliente");
         assertEquals(clientesMaisLucrativos.get(0).getMontanteGasto(), new BigDecimal("6.00"));
 
+    }
+
+    @Test
+    void shouldGetTotalDePedidos() {
+        estatisticasService.addPedidos(pedidos);
+        Integer totalDePedidos = estatisticasService.totalDePedidos();
+
+        assertEquals(16, totalDePedidos);
+    }
+
+    @Test
+    void shouldGetTotalDeProdutos() {
+        estatisticasService.addPedidos(pedidos);
+        Integer totalDeProdutos = estatisticasService.totalDeProdutosVendidos();
+
+        assertEquals(35, totalDeProdutos);
+    }
+
+    @Test
+    void shouldGetTotalDeCategorias() {
+        estatisticasService.addPedidos(pedidos);
+        Integer totalDeCategorias = estatisticasService.totalDeCategorias();
+
+        assertEquals(5, totalDeCategorias);
+    }
+
+    @Test
+    void shouldGetMontanteTotal() {
+        estatisticasService.addPedidos(pedidos);
+        BigDecimal montanteTotal = estatisticasService.montanteTotal();
+
+        assertEquals(new BigDecimal("178374.49"), montanteTotal);
+    }
+
+    @Test
+    void shouldGetPedidoMaisCaro() {
+        estatisticasService.addPedidos(pedidos);
+        Optional<Pedido> pedidoMaisCaro = estatisticasService.pedidoMaisCaro();
+
+        assertEquals(new BigDecimal("55056.00"), pedidoMaisCaro.get().getValorTotal());
+    }
+
+    @Test
+    void shouldGetPedidoMaisBarato() {
+        estatisticasService.addPedidos(pedidos);
+        Optional<Pedido> pedidoMaisBarato = estatisticasService.pedidoMaisBarato();
+
+        assertEquals(new BigDecimal("95.17"), pedidoMaisBarato.get().getValorTotal() );
     }
 }

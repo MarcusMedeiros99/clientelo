@@ -9,14 +9,11 @@ public class ClienteEstatisticas implements Comparable<ClienteEstatisticas> {
     private Integer qtdPedidos;
     private BigDecimal montanteGasto;
 
-    private ClienteEstatisticas(String nome, Integer qtd, BigDecimal montanteGasto) {
-        this.nome = nome;
-        this.qtdPedidos = 1;
-        this.montanteGasto = montanteGasto.multiply(BigDecimal.valueOf(qtd));
-    }
 
     public ClienteEstatisticas(Pedido pedido) {
-        this(pedido.getCliente(), pedido.getQuantidade(), pedido.getPreco());
+        this.nome = pedido.getCliente();
+        this.qtdPedidos = 1;
+        this.montanteGasto = pedido.getValorTotal();
     }
 
     public Integer getQtdPedidos() {
@@ -34,10 +31,7 @@ public class ClienteEstatisticas implements Comparable<ClienteEstatisticas> {
     public void adicionaPedido(Pedido pedido) {
         this.qtdPedidos += 1;
         this.montanteGasto = this.montanteGasto
-                .add(
-                        pedido.getPreco()
-                                .multiply(BigDecimal.valueOf(pedido.getQuantidade()))
-                );
+                .add(pedido.getValorTotal());
     }
 
     @Override
@@ -45,8 +39,6 @@ public class ClienteEstatisticas implements Comparable<ClienteEstatisticas> {
         if (clienteEstatisticas != null) {
             int result = -Integer.compare(qtdPedidos,clienteEstatisticas.qtdPedidos);
             if (result == 0) return this.nome.compareTo(clienteEstatisticas.nome);
-
-//            return result;
 
             return Comparator.comparing(ClienteEstatisticas::getQtdPedidos).reversed()
                     .thenComparing(ClienteEstatisticas::getNome)
