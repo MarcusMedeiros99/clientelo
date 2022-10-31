@@ -1,5 +1,7 @@
 package br.com.alura.clientelo;
 
+import br.com.alura.clientelo.processors.CsvProcessor;
+import br.com.alura.clientelo.processors.ProcessorFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +22,7 @@ public class EstatisticasServiceTest {
 
     @BeforeAll
     static void setup() {
-        pedidos = ProcessadorDeCsv.processaArquivo("pedidos.csv");
+        pedidos = new ProcessorFactory().from("pedidos.csv").processaArquivo();
         umPedido = new Pedido[]{
                 new Pedido("categoria",
                         "produto",

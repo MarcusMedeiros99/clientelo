@@ -16,8 +16,12 @@ public class Relatorio {
         decimalFormatter.applyPattern("R$ #,###.00");
     }
 
-    public Relatorio(EstatisticasService estatisticasService) {
+    private Relatorio(EstatisticasService estatisticasService) {
         this.estatisticasService = estatisticasService;
+    }
+
+    public Relatorio(Pedido[] pedidos) {
+        this(new EstatisticasService(pedidos));
     }
 
     public String produtosMaisVendidos(int n) {

@@ -1,4 +1,6 @@
-package br.com.alura.clientelo;
+package br.com.alura.clientelo.processors;
+
+import br.com.alura.clientelo.Pedido;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -10,11 +12,16 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class ProcessadorDeCsv {
+public final class CsvProcessor implements FileProcessor {
+    private final String path;
 
-    public static Pedido[] processaArquivo(String nomeDoArquivo) {
+    CsvProcessor(String path) {
+        this.path = path;
+    }
+
+    public Pedido[] processaArquivo() {
         try {
-            URL recursoCSV = ClassLoader.getSystemResource(nomeDoArquivo);
+            URL recursoCSV = ClassLoader.getSystemResource(path);
             Path caminhoDoArquivo = caminhoDoArquivo = Path.of(recursoCSV.toURI());
 
             Scanner leitorDeLinhas = new Scanner(caminhoDoArquivo);
@@ -46,7 +53,7 @@ public class ProcessadorDeCsv {
 
             return pedidos;
         } catch (URISyntaxException e) {
-            throw new RuntimeException(String.format("Arquivo {} não localizado!", nomeDoArquivo));
+            throw new RuntimeException(String.format("Arquivo {} não localizado!", path));
         } catch (IOException e) {
             throw new RuntimeException("Erro ao abrir Scanner para processar arquivo!");
         }

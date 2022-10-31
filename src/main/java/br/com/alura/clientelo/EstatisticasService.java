@@ -25,6 +25,11 @@ public class EstatisticasService {
         this.pedidos = new ArrayList<>();
     }
 
+    public EstatisticasService(Pedido[] pedidos) {
+        this();
+        addPedidos(pedidos);
+    }
+
     public void addPedidos(Pedido[] pedidos) {
         List<Pedido> pedidosList = Arrays.asList(pedidos);
 

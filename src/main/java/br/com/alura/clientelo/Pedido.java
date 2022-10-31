@@ -1,5 +1,7 @@
 package br.com.alura.clientelo;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
