@@ -8,6 +8,9 @@ public final class ProcessorFactory {
         if (extension.equals("csv")) {
             return new CsvProcessor(path);
         }
+        else if (extension.equals("json")) {
+            return new JsonProcessor(path);
+        }
         throw new IllegalArgumentException("Extension " + extension + " is not known.");
     }
 

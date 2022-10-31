@@ -12,7 +12,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException, URISyntaxException {
 
-        FileProcessor fileProcessor = new ProcessorFactory().from("pedidos.csv");
+        FileProcessor fileProcessor = new ProcessorFactory().from("pedidos.json");
         Pedido[] pedidos = fileProcessor.processaArquivo();
 
         Relatorio relatorio = new Relatorio(pedidos);

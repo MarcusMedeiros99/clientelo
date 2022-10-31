@@ -14,7 +14,7 @@ class JsonProcessorTest {
 
 
     @Test
-    void shouldProcessarArquivo() throws URISyntaxException {
+    void shouldProcessarArquivo() {
 
         String path = "./pedidos.json";
 
@@ -22,5 +22,6 @@ class JsonProcessorTest {
         Pedido[] pedidos = processor.processaArquivo();
 
         assertEquals(16, pedidos.length);
+
     }
 }

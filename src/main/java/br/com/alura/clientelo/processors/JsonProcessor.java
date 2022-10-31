@@ -2,25 +2,14 @@ package br.com.alura.clientelo.processors;
 
 import br.com.alura.clientelo.Pedido;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Path;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 
 public class JsonProcessor implements FileProcessor {
     private final String path;
@@ -39,7 +28,7 @@ public class JsonProcessor implements FileProcessor {
         try {
             URL recursoJson = ClassLoader.getSystemResource(path);
             File file = new File(recursoJson.toURI());
-            List<PedidoDeserializer> pedidos = objectMapper.readValue(file, new TypeReference<List<PedidoDeserializer>>() {});
+            List<PedidoDeserializer> pedidos = objectMapper.readValue(file, new TypeReference<>() {});
             Object[] pedidosArray = pedidos.stream().map(PedidoDeserializer::toPedido).toArray();
             return Arrays.copyOf(pedidosArray, pedidosArray.length, Pedido[].class);
 
