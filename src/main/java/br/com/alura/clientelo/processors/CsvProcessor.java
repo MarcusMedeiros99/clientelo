@@ -1,7 +1,14 @@
 package br.com.alura.clientelo.processors;
 
 import br.com.alura.clientelo.Pedido;
+import com.opencsv.CSVParser;
+import com.opencsv.CSVParserBuilder;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.bean.CsvToBeanBuilder;
 
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
@@ -10,6 +17,7 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public final class CsvProcessor implements FileProcessor {
@@ -22,36 +30,17 @@ public final class CsvProcessor implements FileProcessor {
     public Pedido[] processaArquivo() {
         try {
             URL recursoCSV = ClassLoader.getSystemResource(path);
-            Path caminhoDoArquivo = caminhoDoArquivo = Path.of(recursoCSV.toURI());
+            File file = new File(recursoCSV.toURI());
+            FileReader fileReader = new FileReader(file);
 
-            Scanner leitorDeLinhas = new Scanner(caminhoDoArquivo);
+            List<PedidoDeserializer> beans
+                    = new CsvToBeanBuilder<PedidoDeserializer>(fileReader)
+                    .withSeparator(',').withType(PedidoDeserializer.class)
+                    .build().parse();
 
-            leitorDeLinhas.nextLine();
+            Object[] pedidos = beans.stream().map(PedidoDeserializer::toPedido).toArray();
 
-            Pedido[] pedidos = new Pedido[10];
-
-            int quantidadeDeRegistros = 0;
-            while (leitorDeLinhas.hasNextLine()) {
-                String linha = leitorDeLinhas.nextLine();
-                String[] registro = linha.split(",");
-
-                String categoria = registro[0];
-                String produto = registro[1];
-                BigDecimal preco = new BigDecimal(registro[2]);
-                int quantidade = Integer.parseInt(registro[3]);
-                LocalDate data = LocalDate.parse(registro[4], DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-                String cliente = registro[5];
-
-                Pedido pedido = new Pedido(categoria, produto, cliente, preco, quantidade, data);
-                pedidos[quantidadeDeRegistros] = pedido;
-
-                quantidadeDeRegistros++;
-                if (pedidos[pedidos.length - 1] != null) {
-                    pedidos = Arrays.copyOf(pedidos, pedidos.length * 2);
-                }
-            }
-
-            return pedidos;
+            return Arrays.copyOf(pedidos, pedidos.length, Pedido[].class);
         } catch (URISyntaxException e) {
             throw new RuntimeException(String.format("Arquivo {} não localizado!", path));
         } catch (IOException e) {
