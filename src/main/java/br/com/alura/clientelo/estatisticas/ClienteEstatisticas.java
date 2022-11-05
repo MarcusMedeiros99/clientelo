@@ -1,4 +1,4 @@
-package br.com.alura.clientelo;
+package br.com.alura.clientelo.estatisticas;
 
 import java.math.BigDecimal;
 import java.util.Comparator;
@@ -10,7 +10,7 @@ public class ClienteEstatisticas implements Comparable<ClienteEstatisticas> {
     private BigDecimal montanteGasto;
 
 
-    public ClienteEstatisticas(Pedido pedido) {
+    public ClienteEstatisticas(PedidoDTO pedido) {
         this.nome = pedido.getCliente();
         this.qtdPedidos = 1;
         this.montanteGasto = pedido.getValorTotal();
@@ -28,7 +28,7 @@ public class ClienteEstatisticas implements Comparable<ClienteEstatisticas> {
         return montanteGasto;
     }
 
-    public void adicionaPedido(Pedido pedido) {
+    public void adicionaPedido(PedidoDTO pedido) {
         this.qtdPedidos += 1;
         this.montanteGasto = this.montanteGasto
                 .add(pedido.getValorTotal());

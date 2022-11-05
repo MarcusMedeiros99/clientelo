@@ -1,11 +1,9 @@
-package br.com.alura.clientelo;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
+package br.com.alura.clientelo.estatisticas;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class Pedido {
+public class PedidoDTO {
 
     private String categoria;
     private String produto;
@@ -16,7 +14,7 @@ public class Pedido {
 
     private LocalDate data;
 
-    public Pedido(String categoria, String produto, String cliente, BigDecimal preco, int quantidade, LocalDate data) {
+    public PedidoDTO(String categoria, String produto, String cliente, BigDecimal preco, int quantidade, LocalDate data) {
         this.categoria = categoria;
         this.produto = produto;
         this.cliente = cliente;
@@ -49,11 +47,11 @@ public class Pedido {
         return data;
     }
 
-    public boolean isMaisBaratoQue(Pedido outroPedido) {
+    public boolean isMaisBaratoQue(PedidoDTO outroPedido) {
         return getValorTotal().compareTo(outroPedido.getValorTotal()) < 0;
     }
 
-    public boolean isMaisCaroQue(Pedido outroPedido) {
+    public boolean isMaisCaroQue(PedidoDTO outroPedido) {
         return getValorTotal().compareTo(outroPedido.getValorTotal()) > 0;
     }
 

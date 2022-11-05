@@ -1,5 +1,6 @@
 package br.com.alura.clientelo;
 
+import br.com.alura.clientelo.estatisticas.PedidoDTO;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -8,20 +9,20 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PedidoTest {
+class PedidoDTOTest {
 
-    private static Pedido pedido;
-    private static Pedido pedidoMaisBarato;
-    private static Pedido pedidoMaisCaro;
+    private static PedidoDTO pedido;
+    private static PedidoDTO pedidoMaisBarato;
+    private static PedidoDTO pedidoMaisCaro;
 
 
     @BeforeAll
     static void setup() {
-        pedido = new Pedido("categoria","produto", "cliente",
+        pedido = new PedidoDTO("categoria","produto", "cliente",
                 new BigDecimal("5.00"), 2, LocalDate.now());
-        pedidoMaisBarato = new Pedido("categoria","produto", "cliente",
+        pedidoMaisBarato = new PedidoDTO("categoria","produto", "cliente",
                 new BigDecimal("2.50"), 2, LocalDate.now());
-        pedidoMaisCaro = new Pedido("categoria","produto", "cliente",
+        pedidoMaisCaro = new PedidoDTO("categoria","produto", "cliente",
                 new BigDecimal("10.00"), 2, LocalDate.now());
     }
 

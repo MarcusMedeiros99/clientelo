@@ -1,4 +1,4 @@
-package br.com.alura.clientelo;
+package br.com.alura.clientelo.estatisticas;
 
 import br.com.alura.clientelo.repositories.CategoriaEstatisticasRepository;
 import br.com.alura.clientelo.repositories.ClienteEstatisticasRepository;
@@ -13,7 +13,7 @@ public class EstatisticasService {
     private final EstatisticasRepository<CategoriaEstatisticas> categorias;
     private final EstatisticasRepository<ClienteEstatisticas> clientes;
     private final EstatisticasRepository<ClienteEstatisticas> clientesMaisLucrativos;
-    private final List<Pedido> pedidos;
+    private final List<PedidoDTO> pedidos;
 
     public EstatisticasService() {
         this.produtos = new ProdutoEstatisticasRepository();
@@ -25,13 +25,13 @@ public class EstatisticasService {
         this.pedidos = new ArrayList<>();
     }
 
-    public EstatisticasService(Pedido[] pedidos) {
+    public EstatisticasService(PedidoDTO[] pedidos) {
         this();
         addPedidos(pedidos);
     }
 
-    public void addPedidos(Pedido[] pedidos) {
-        List<Pedido> pedidosList = Arrays.asList(pedidos);
+    public void addPedidos(PedidoDTO[] pedidos) {
+        List<PedidoDTO> pedidosList = Arrays.asList(pedidos);
 
         pedidosList
                 .stream()
@@ -39,7 +39,7 @@ public class EstatisticasService {
                 .forEach((this::addPedido));
     }
 
-    private void addPedido(Pedido pedido) {
+    private void addPedido(PedidoDTO pedido) {
         produtos.insert(pedido);
         categorias.insert(pedido);
         clientes.insert(pedido);
@@ -72,16 +72,16 @@ public class EstatisticasService {
                 .toList();
     }
 
-    public Optional<Pedido> pedidoMaisCaro() {
-        return pedidos.stream().max(Comparator.comparing(Pedido::getValorTotal));
+    public Optional<PedidoDTO> pedidoMaisCaro() {
+        return pedidos.stream().max(Comparator.comparing(PedidoDTO::getValorTotal));
     }
 
-    public Optional<Pedido> pedidoMaisBarato() {
-        return pedidos.stream().min(Comparator.comparing(Pedido::getValorTotal));
+    public Optional<PedidoDTO> pedidoMaisBarato() {
+        return pedidos.stream().min(Comparator.comparing(PedidoDTO::getValorTotal));
     }
 
     public BigDecimal montanteTotal() {
-        return pedidos.stream().map(Pedido::getValorTotal).reduce(BigDecimal.ZERO, BigDecimal::add);
+        return pedidos.stream().map(PedidoDTO::getValorTotal).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public Integer totalDeCategorias() {
@@ -89,7 +89,7 @@ public class EstatisticasService {
     }
 
     public Integer totalDeProdutosVendidos() {
-        return pedidos.stream().map(Pedido::getQuantidade).reduce(0, Integer::sum);
+        return pedidos.stream().map(PedidoDTO::getQuantidade).reduce(0, Integer::sum);
     }
 
     public Integer totalDePedidos() {

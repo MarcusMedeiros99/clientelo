@@ -1,6 +1,6 @@
 package br.com.alura.clientelo.processors;
 
-import br.com.alura.clientelo.Pedido;
+import br.com.alura.clientelo.estatisticas.PedidoDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -24,13 +24,13 @@ public class JsonProcessor implements FileProcessor {
     }
 
     @Override
-    public Pedido[] processaArquivo() {
+    public PedidoDTO[] processaArquivo() {
         try {
             URL recursoJson = ClassLoader.getSystemResource(path);
             File file = new File(recursoJson.toURI());
             List<PedidoDeserializer> pedidos = objectMapper.readValue(file, new TypeReference<>() {});
             Object[] pedidosArray = pedidos.stream().map(PedidoDeserializer::toPedido).toArray();
-            return Arrays.copyOf(pedidosArray, pedidosArray.length, Pedido[].class);
+            return Arrays.copyOf(pedidosArray, pedidosArray.length, PedidoDTO[].class);
 
         } catch (FileNotFoundException e) {
             throw new RuntimeException(String.format("File not found %s", path));

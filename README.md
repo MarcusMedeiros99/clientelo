@@ -1,5 +1,7 @@
 # ClientELO
 
+- Use `docker-compose up` antes de rodar os testes de DAO para subir um banco de dados mysql
+
 ## Informações gerais dos pedidos em _pedidos.csv_
 - Campos: **CATEGORIA, PRODUTO, PREÇO, QUANTIDADE, DATA, CLIENTE**
 

@@ -1,4 +1,4 @@
-package br.com.alura.clientelo;
+package br.com.alura.clientelo.estatisticas;
 
 import java.math.BigDecimal;
 
@@ -6,14 +6,14 @@ public class CategoriaEstatisticas implements Comparable<CategoriaEstatisticas> 
     private BigDecimal montante;
     private String categoria;
     private Integer qtdVendas;
-    private Pedido pedidoComProdutoMaisCaro;
+    private PedidoDTO pedidoComProdutoMaisCaro;
 
     private CategoriaEstatisticas(String categoria, Integer qtdVendas) {
         this.categoria = categoria;
         this.qtdVendas = qtdVendas;
     }
 
-    public CategoriaEstatisticas(Pedido pedido) {
+    public CategoriaEstatisticas(PedidoDTO pedido) {
         this(pedido.getCategoria(), pedido.getQuantidade());
         this.pedidoComProdutoMaisCaro = pedido;
         this.montante = pedido.getValorTotal();
@@ -38,7 +38,7 @@ public class CategoriaEstatisticas implements Comparable<CategoriaEstatisticas> 
         throw new NullPointerException();
     }
 
-    public void adicionaPedido(Pedido pedido) {
+    public void adicionaPedido(PedidoDTO pedido) {
         this.qtdVendas += pedido.getQuantidade();
         this.montante = this.montante.add(pedido.getValorTotal());
 

@@ -1,4 +1,4 @@
-package br.com.alura.clientelo;
+package br.com.alura.clientelo.estatisticas;
 
 
 public class ProdutoEstatisticas implements Comparable<ProdutoEstatisticas> {
@@ -12,7 +12,7 @@ public class ProdutoEstatisticas implements Comparable<ProdutoEstatisticas> {
         this.categoria = categoria;
     }
 
-    public ProdutoEstatisticas(Pedido pedido) {
+    public ProdutoEstatisticas(PedidoDTO pedido) {
         this(pedido.getProduto(), pedido.getQuantidade(), pedido.getCategoria());
     }
 
@@ -28,7 +28,7 @@ public class ProdutoEstatisticas implements Comparable<ProdutoEstatisticas> {
         return categoria;
     }
 
-    public void adicionaPedido(Pedido pedido) {
+    public void adicionaPedido(PedidoDTO pedido) {
         this.qtdDeVendas += pedido.getQuantidade();
     }
 

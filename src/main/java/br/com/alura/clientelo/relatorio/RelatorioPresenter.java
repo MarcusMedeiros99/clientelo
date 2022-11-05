@@ -1,4 +1,4 @@
-package br.com.alura.clientelo;
+package br.com.alura.clientelo.relatorio;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +11,7 @@ public class RelatorioPresenter {
         this.relatorio = relatorio;
     }
 
-    void show() {
+    public void show() {
         logger.info("##### RELATÓRIO DE VALORES TOTAIS #####");
         logger.info(relatorio.totalDePedidos());
         logger.info(relatorio.totalDeProdutosVendidos());

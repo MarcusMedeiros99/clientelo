@@ -1,6 +1,6 @@
 package br.com.alura.clientelo.processors;
 
-import br.com.alura.clientelo.Pedido;
+import br.com.alura.clientelo.estatisticas.PedidoDTO;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -43,8 +43,8 @@ public final class PedidoDeserializer {
         this.data = data;
     }
 
-    Pedido toPedido() {
-        return new Pedido(
+    PedidoDTO toPedido() {
+        return new PedidoDTO(
                 categoria,
                 produto,
                 cliente,

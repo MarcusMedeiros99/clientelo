@@ -1,4 +1,10 @@
-package br.com.alura.clientelo;
+package br.com.alura.clientelo.relatorio;
+
+import br.com.alura.clientelo.estatisticas.PedidoDTO;
+import br.com.alura.clientelo.estatisticas.CategoriaEstatisticas;
+import br.com.alura.clientelo.estatisticas.ClienteEstatisticas;
+import br.com.alura.clientelo.estatisticas.EstatisticasService;
+import br.com.alura.clientelo.estatisticas.ProdutoEstatisticas;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -20,7 +26,7 @@ public class Relatorio {
         this.estatisticasService = estatisticasService;
     }
 
-    public Relatorio(Pedido[] pedidos) {
+    public Relatorio(PedidoDTO[] pedidos) {
         this(new EstatisticasService(pedidos));
     }
 
@@ -100,12 +106,12 @@ public class Relatorio {
     }
 
     public String pedidoMaisBarato() {
-        Pedido maisBarato = estatisticasService.pedidoMaisBarato().get();
+        PedidoDTO maisBarato = estatisticasService.pedidoMaisBarato().get();
         return "PEDIDO MAIS BARATO: " + decimalFormatter.format(maisBarato.getValorTotal()) + " (" + maisBarato.getProduto() + ")";
     }
 
     public String pedidoMaisCaro() {
-        Pedido maisCaro = estatisticasService.pedidoMaisCaro().get();
+        PedidoDTO maisCaro = estatisticasService.pedidoMaisCaro().get();
         return "PEDIDO MAIS BARATO: " + decimalFormatter.format(maisCaro.getValorTotal()) + " (" + maisCaro.getProduto() + ")";
     }
 }

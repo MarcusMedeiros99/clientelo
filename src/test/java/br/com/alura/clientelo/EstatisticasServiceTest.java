@@ -1,6 +1,10 @@
 package br.com.alura.clientelo;
 
-import br.com.alura.clientelo.processors.CsvProcessor;
+import br.com.alura.clientelo.estatisticas.CategoriaEstatisticas;
+import br.com.alura.clientelo.estatisticas.ClienteEstatisticas;
+import br.com.alura.clientelo.estatisticas.EstatisticasService;
+import br.com.alura.clientelo.estatisticas.ProdutoEstatisticas;
+import br.com.alura.clientelo.estatisticas.PedidoDTO;
 import br.com.alura.clientelo.processors.ProcessorFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,23 +20,23 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class EstatisticasServiceTest {
 
     private EstatisticasService estatisticasService;
-    private static Pedido[] umPedido;
-    private static Pedido[] pedidos;
-    private static Pedido[] tresPedidosUmCliente;
+    private static PedidoDTO[] umPedido;
+    private static PedidoDTO[] pedidos;
+    private static PedidoDTO[] tresPedidosUmCliente;
 
     @BeforeAll
     static void setup() {
         pedidos = new ProcessorFactory().from("pedidos.csv").processaArquivo();
-        umPedido = new Pedido[]{
-                new Pedido("categoria",
+        umPedido = new PedidoDTO[]{
+                new PedidoDTO("categoria",
                         "produto",
                         "cliente",
                         BigDecimal.ZERO,
                         2,
                         LocalDate.now())
         };
-        tresPedidosUmCliente = new Pedido[3];
-        for (int i = 0; i < 3; i++) tresPedidosUmCliente[i] = new Pedido(
+        tresPedidosUmCliente = new PedidoDTO[3];
+        for (int i = 0; i < 3; i++) tresPedidosUmCliente[i] = new PedidoDTO(
                 "categoria",
                 "produto" + i,
                 "cliente",
@@ -251,7 +255,7 @@ public class EstatisticasServiceTest {
     @Test
     void shouldGetPedidoMaisCaro() {
         estatisticasService.addPedidos(pedidos);
-        Optional<Pedido> pedidoMaisCaro = estatisticasService.pedidoMaisCaro();
+        Optional<PedidoDTO> pedidoMaisCaro = estatisticasService.pedidoMaisCaro();
 
         assertEquals(new BigDecimal("55056.00"), pedidoMaisCaro.get().getValorTotal());
     }
@@ -259,7 +263,7 @@ public class EstatisticasServiceTest {
     @Test
     void shouldGetPedidoMaisBarato() {
         estatisticasService.addPedidos(pedidos);
-        Optional<Pedido> pedidoMaisBarato = estatisticasService.pedidoMaisBarato();
+        Optional<PedidoDTO> pedidoMaisBarato = estatisticasService.pedidoMaisBarato();
 
         assertEquals(new BigDecimal("95.17"), pedidoMaisBarato.get().getValorTotal() );
     }

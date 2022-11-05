@@ -1,7 +1,7 @@
 package br.com.alura.clientelo.repositories;
 
-import br.com.alura.clientelo.ClienteEstatisticas;
-import br.com.alura.clientelo.Pedido;
+import br.com.alura.clientelo.estatisticas.ClienteEstatisticas;
+import br.com.alura.clientelo.estatisticas.PedidoDTO;
 
 import java.util.*;
 
@@ -25,20 +25,20 @@ public class ClienteEstatisticasRepository implements EstatisticasRepository<Cli
     }
 
     @Override
-    public void insert(Pedido pedido) {
+    public void insert(PedidoDTO pedido) {
         String cliente = pedido.getCliente();
         if (!clienteToEstatisticas.containsKey(cliente)) insertNovoCliente(cliente, pedido);
         else updateCliente(cliente, pedido);
     }
 
-    private void updateCliente(String cliente, Pedido pedido) {
+    private void updateCliente(String cliente, PedidoDTO pedido) {
         ClienteEstatisticas clienteEstatisticas = clienteToEstatisticas.get(cliente);
         clientes.remove(clienteEstatisticas);
         clienteEstatisticas.adicionaPedido(pedido);
         clientes.add(clienteEstatisticas);
     }
 
-    private void insertNovoCliente(String cliente, Pedido pedido) {
+    private void insertNovoCliente(String cliente, PedidoDTO pedido) {
         ClienteEstatisticas clienteEstatisticas = new ClienteEstatisticas(pedido);
         clientes.add(clienteEstatisticas);
         clienteToEstatisticas.put(cliente, clienteEstatisticas);
