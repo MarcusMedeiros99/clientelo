@@ -1,8 +1,6 @@
 package br.com.alura.clientelo.dao;
 
-import br.com.alura.clientelo.dao.vo.VendasPorCategoriaVO;
 import br.com.alura.clientelo.models.Pedido;
-import br.com.alura.clientelo.models.Produto;
 import jakarta.persistence.EntityManager;
 
 import java.util.List;

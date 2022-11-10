@@ -1,6 +1,5 @@
 package br.com.alura.clientelo.dao;
 
-import br.com.alura.clientelo.models.Categoria;
 import br.com.alura.clientelo.models.Produto;
 import jakarta.persistence.EntityManager;
 
