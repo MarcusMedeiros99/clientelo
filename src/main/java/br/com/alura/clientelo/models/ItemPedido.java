@@ -16,10 +16,10 @@ public class ItemPedido {
     @Column(name = "quantidade", nullable = false)
     private Long quantidade;
     @ManyToOne(optional = false)
-    @JoinColumn(name = "pedido_id")
+//    @JoinColumn(name = "pedido_id")
     private Pedido pedido;
-    @OneToOne(optional = false)
-    @JoinColumn(name = "produto_id")
+    @ManyToOne(optional = false)
+//    @JoinColumn(name = "produto_id")
     private Produto produto;
     @Column(name = "desconto", scale = 2, nullable = false)
     private BigDecimal desconto;

@@ -17,14 +17,14 @@ public class Pedido {
     @Column(name = "data", nullable = false)
     private LocalDate data;
     @ManyToOne(optional = false)
-    @JoinColumn(name = "cliente_id")
+//    @JoinColumn(name = "cliente_id")
     private Cliente cliente;
     @Column(name = "desconto", nullable = false, scale = 2)
     private BigDecimal desconto;
     @Column(name = "tipo_desconto", nullable = false)
     @Enumerated(EnumType.STRING)
     private TipoDescontoPedido tipoDesconto;
-    @OneToMany(mappedBy = "pedido", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "pedido")
     private List<ItemPedido> itemPedidos;
 
     public Long getId() {
@@ -73,5 +73,16 @@ public class Pedido {
 
     public void setItemPedidos(List<ItemPedido> itemPedidos) {
         this.itemPedidos = itemPedidos;
+    }
+
+
+    @Override
+    public String
+    toString() {
+        return "Pedido{" +
+                "id=" + id +
+                ", data=" + data +
+                ", cliente=" + cliente +
+                '}';
     }
 }

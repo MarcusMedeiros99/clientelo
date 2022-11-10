@@ -35,6 +35,13 @@ public class ProdutoDAO implements DAO<Long, Produto> {
         return em.createQuery(query, Produto.class).getResultList();
     }
 
+    public List<Produto> maisVendidos() {
+        String query = "SELECT p from Produto p " +
+                "JOIN ItemPedido ip on ip.produto = p " +
+                "GROUP BY p.id HAVING SUM(ip.quantidade) > 3";
+        return em.createQuery(query, Produto.class).getResultList();
+    }
+
     private void runWithinTransaction(Runnable callback) {
         em.getTransaction().begin();
         callback.run();

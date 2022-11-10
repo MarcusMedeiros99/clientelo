@@ -1,5 +1,6 @@
 package br.com.alura.clientelo.dao;
 
+import br.com.alura.clientelo.dao.vo.ClienteFielVO;
 import br.com.alura.clientelo.models.Categoria;
 import br.com.alura.clientelo.models.Cliente;
 import jakarta.persistence.EntityManager;
@@ -38,6 +39,32 @@ public class ClienteDAO implements DAO<Long, Cliente> {
         String query = "SELECT c from Cliente c WHERE c.nome like :nome";
         return em.createQuery(query, Cliente.class)
                 .setParameter("nome", "%" + nome + "%")
+                .getResultList();
+    }
+
+    public List<ClienteFielVO> clientesFieis() {
+        String query = "SELECT new br.com.alura.clientelo.dao.vo.ClienteFielVO(" +
+                "c.nome, COUNT(p.id)," +
+                "SUM(ip.quantidade * ip.precoUnitario))" +
+                "FROM Cliente c " +
+                "JOIN Pedido p on p.cliente = c " +
+                "JOIN ItemPedido ip on ip.pedido = p " +
+                "GROUP BY c.id " +
+                "ORDER BY 3 DESC LIMIT 3";
+        return em.createQuery(query, ClienteFielVO.class)
+                .getResultList();
+    }
+
+    public List<ClienteFielVO> maisLucrativos() {
+        String query = "SELECT new br.com.alura.clientelo.dao.vo.ClienteFielVO(" +
+                "c.nome, COUNT(p.id)," +
+                "SUM(ip.quantidade * ip.precoUnitario))" +
+                "FROM Cliente c " +
+                "JOIN Pedido p on p.cliente = c " +
+                "JOIN ItemPedido ip on ip.pedido = p " +
+                "GROUP BY c.id " +
+                "ORDER BY 3 DESC LIMIT 2";
+        return em.createQuery(query, ClienteFielVO.class)
                 .getResultList();
     }
 

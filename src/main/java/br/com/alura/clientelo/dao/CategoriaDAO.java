@@ -1,5 +1,6 @@
 package br.com.alura.clientelo.dao;
 
+import br.com.alura.clientelo.dao.vo.VendasPorCategoriaVO;
 import br.com.alura.clientelo.models.Categoria;
 import jakarta.persistence.EntityManager;
 
@@ -34,6 +35,17 @@ public class CategoriaDAO implements DAO<Long, Categoria> {
         return em.createQuery(query, Categoria.class)
                 .setParameter("nome", nome)
                 .getSingleResult();
+    }
+
+    public List<VendasPorCategoriaVO> agrupaPorCategoria() {
+        String jpql = "SELECT new br.com.alura.clientelo.dao.vo.VendasPorCategoriaVO(" +
+                "c.nome, SUM(ip.quantidade), SUM(ip.quantidade * ip.precoUnitario)" +
+                ") from " +
+                "Pedido p " +
+                "JOIN ItemPedido ip " +
+                "JOIN Produto pr " +
+                "JOIN Categoria c group by c.nome";
+        return em.createQuery(jpql, VendasPorCategoriaVO.class).getResultList();
     }
 
     private void runWithinTransaction(Runnable callback) {
