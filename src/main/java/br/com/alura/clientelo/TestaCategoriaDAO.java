@@ -1,40 +1,27 @@
 package br.com.alura.clientelo;
 
 import br.com.alura.clientelo.dao.CategoriaDAO;
-import br.com.alura.clientelo.models.Address;
+import br.com.alura.clientelo.dao.DAO;
 import br.com.alura.clientelo.models.Categoria;
 import br.com.alura.clientelo.models.CategoriaStatus;
-import br.com.alura.clientelo.models.Cliente;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-
-import java.util.List;
-
-public class TestaCategoriaDAO {
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 
-    public static void main(String[] args) throws Exception {
-        try (EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("clientelo");){
-            EntityManager em = managerFactory.createEntityManager();
+@SpringBootApplication
+@EnableJpaRepositories(repositoryImplementationPostfix = "ClienteloDAO")
+public class TestaCategoriaDAO implements CommandLineRunner {
 
-            CategoriaDAO categoriaDAO = new CategoriaDAO(em);
-            Categoria info = novaCategoria("INFORMATICA");
-            Categoria eletro = novaCategoria("ELETRODOMESTICOS");
-            Categoria celulares = novaCategoria("CELULARES");
+    private final CategoriaDAO categoriaDAO;
 
-            categoriaDAO.cadastra(info);
-            categoriaDAO.cadastra(eletro);
-            categoriaDAO.cadastra(celulares);
+    public TestaCategoriaDAO(CategoriaDAO categoriaDAO) {
+        this.categoriaDAO = categoriaDAO;
+    }
 
-            celulares.setStatus(CategoriaStatus.INATIVA);
-
-            categoriaDAO.atualiza(celulares);
-
-            categoriaDAO.listaTodos().forEach(System.out::println);
-
-            em.close();
-        }
+    public static void main(String[] args) {
+        SpringApplication.run(TestaCategoriaDAO.class, args);
     }
 
     private static Categoria novaCategoria(String nome) {
@@ -42,5 +29,27 @@ public class TestaCategoriaDAO {
         categoria.setNome(nome);
         categoria.setStatus(CategoriaStatus.ATIVA);
         return categoria;
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        Categoria info = novaCategoria("INFORMATICA");
+        Categoria eletro = novaCategoria("ELETRODOMESTICOS");
+        Categoria celulares = novaCategoria("CELULARES");
+
+        categoriaDAO.cadastra(info);
+        categoriaDAO.cadastra(eletro);
+        categoriaDAO.cadastra(celulares);
+
+        celulares.setStatus(CategoriaStatus.INATIVA);
+
+        categoriaDAO.atualiza(celulares);
+        categoriaDAO.listaTodos().forEach(System.out::println);
+        limpaBanco();
+
+    }
+
+    private void limpaBanco() {
+        categoriaDAO.findAll().forEach(categoriaDAO::remove);
     }
 }

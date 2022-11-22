@@ -1,6 +1,6 @@
 package br.com.alura.clientelo.models;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -13,7 +13,6 @@ public class Pedido {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private Long id;
-    @Temporal(TemporalType.DATE)
     @Column(name = "data", nullable = false)
     private LocalDate data;
     @ManyToOne(optional = false)

@@ -7,9 +7,9 @@ import br.com.alura.clientelo.dao.ProdutoDAO;
 import br.com.alura.clientelo.dao.vo.ClienteFielVO;
 import br.com.alura.clientelo.dao.vo.VendasPorCategoriaVO;
 import br.com.alura.clientelo.models.*;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -17,29 +17,32 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestaPedidoDAO {
-    private static PedidoDAO pedidoDAO;
-    private static ClienteDAO clienteDAO;
-    private static CategoriaDAO categoriaDAO;
-    private static ProdutoDAO produtoDAO;
-    private static EntityManager em;
+@SpringBootApplication
+public class TestaPedidoDAO implements CommandLineRunner {
+    private final PedidoDAO pedidoDAO;
+    private final ClienteDAO clienteDAO;
+    private final CategoriaDAO categoriaDAO;
+    private final ProdutoDAO produtoDAO;
 
-    public static void main(String[] args) {
-        try (EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("clientelo");) {
-            em = managerFactory.createEntityManager();
-
-            pedidoDAO = new PedidoDAO(em);
-            clienteDAO = new ClienteDAO(em);
-            categoriaDAO = new CategoriaDAO(em);
-            produtoDAO = new ProdutoDAO(em);
-
-            populaBanco();
-            relatorio();
-        }
-
+    public TestaPedidoDAO(PedidoDAO pedidoDAO, ClienteDAO clienteDAO, CategoriaDAO categoriaDAO, ProdutoDAO produtoDAO) {
+        this.pedidoDAO = pedidoDAO;
+        this.clienteDAO = clienteDAO;
+        this.categoriaDAO = categoriaDAO;
+        this.produtoDAO = produtoDAO;
     }
 
-    private static void relatorio() {
+    public static void main(String[] args) {
+        SpringApplication.run(TestaPedidoDAO.class, args);
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        populaBanco();
+        relatorio();
+        limpaBanco();
+    }
+
+    private void relatorio() {
         List<Pedido> pedidos = pedidoDAO.listaTodos();
         System.out.println("TODOS OS PEDIDOS");
         pedidos.forEach(System.out::println);
@@ -49,7 +52,7 @@ public class TestaPedidoDAO {
         System.out.println("VENDAS POR CATEGORIA");
         vendasPorCategoria.forEach(System.out::println);
 
-        List<ClienteFielVO> clientesFieis = clienteDAO.clientesFieis();
+        List<ClienteFielVO> clientesFieis = clienteDAO.clientesFieis(ClienteDAO.clientesFieisPage);
         System.out.println("CLIENTES FIEIS");
         clientesFieis.forEach(System.out::println);
 
@@ -57,12 +60,12 @@ public class TestaPedidoDAO {
         System.out.println("PRODUTOS MAIS VENDIDOS");
         maisVendidos.forEach(System.out::println);
 
-        List<ClienteFielVO> maisLucrativos = clienteDAO.maisLucrativos();
+        List<ClienteFielVO> maisLucrativos = clienteDAO.maisLucrativos(ClienteDAO.maisLucrativosPage);
         System.out.println("CLIENTES MAIS LUCRATIVOS");
         maisLucrativos.forEach(System.out::println);
     }
 
-    private static Cliente createCliente(int i) {
+    private Cliente createCliente(int i) {
         Cliente cliente = new Cliente();
         cliente.setNome("cliente legal" + i);
         cliente.setCpf("1111111111" + i);
@@ -124,32 +127,39 @@ public class TestaPedidoDAO {
         return pedido;
     }
 
-    private static void populaBanco() {
-
-            Cliente[] cliente = new Cliente[4];
-            for (int i = 0; i < 4; i++) {
-                cliente[i] = createCliente(i);
-                clienteDAO.cadastra(cliente[i]);
-            }
-
-            Categoria celulares = criaCategoria("CELULARES");
-            Categoria informatica = criaCategoria("INFORMATICA");
-            categoriaDAO.cadastra(celulares);
-            categoriaDAO.cadastra(informatica);
-
-            Produto[] produtos = new Produto[3];
-            produtos[0] = criaProduto("xiaomi", celulares);
-            produtos[1] = criaProduto("iPhone", celulares);
-            produtos[2] = criaProduto("notebook dell", informatica);
-            produtoDAO.cadastra(produtos[0]);
-            produtoDAO.cadastra(produtos[1]);
-            produtoDAO.cadastra(produtos[2]);
-
-            Pedido[] pedidos = new Pedido[4];
-            for (int i = 0; i < 4; i++) {
-                pedidos[i] = criaPedido(cliente[i], produtos[i % 3], (long) i + 1L);
-                pedidoDAO.cadastra(pedidos[i]);
-            }
-
+    private void populaBanco() {
+        Cliente[] cliente = new Cliente[4];
+        for (int i = 0; i < 4; i++) {
+            cliente[i] = createCliente(i);
+            clienteDAO.cadastra(cliente[i]);
         }
+        Categoria celulares = criaCategoria("CELULARES");
+        Categoria informatica = criaCategoria("INFORMATICA");
+        categoriaDAO.cadastra(celulares);
+        categoriaDAO.cadastra(informatica);
+
+        Produto[] produtos = new Produto[3];
+        produtos[0] = criaProduto("xiaomi", celulares);
+        produtos[1] = criaProduto("iPhone", celulares);
+        produtos[2] = criaProduto("notebook dell", informatica);
+
+        produtoDAO.cadastra(produtos[0]);
+        produtoDAO.cadastra(produtos[1]);
+        produtoDAO.cadastra(produtos[2]);
+
+        Pedido[] pedidos = new Pedido[4];
+        for (int i = 0; i < 4; i++) {
+            pedidos[i] = criaPedido(cliente[i], produtos[i % 3], (long) i + 1L);
+            pedidoDAO.cadastra(pedidos[i]);
+        }
+
+    }
+
+    private void limpaBanco() {
+        pedidoDAO.findAll().forEach(pedidoDAO::remove);
+        produtoDAO.findAll().forEach(produtoDAO::remove);
+        categoriaDAO.findAll().forEach(categoriaDAO::remove);
+        clienteDAO.findAll().forEach(clienteDAO::remove);
+    }
+
 }

@@ -1,6 +1,6 @@
 package br.com.alura.clientelo.models;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 import java.math.BigDecimal;
 
@@ -15,9 +15,9 @@ public class ItemPedido {
     private BigDecimal precoUnitario;
     @Column(name = "quantidade", nullable = false)
     private Long quantidade;
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private Pedido pedido;
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private Produto produto;
     @Column(name = "desconto", scale = 2, nullable = false)
     private BigDecimal desconto;

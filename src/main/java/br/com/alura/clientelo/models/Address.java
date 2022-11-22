@@ -1,7 +1,7 @@
 package br.com.alura.clientelo.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 
 @Embeddable
 public class Address {

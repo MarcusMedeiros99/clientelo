@@ -1,6 +1,6 @@
 package br.com.alura.clientelo.models;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "CLIENTE")

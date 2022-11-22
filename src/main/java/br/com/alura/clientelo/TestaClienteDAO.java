@@ -1,36 +1,25 @@
 package br.com.alura.clientelo;
 
-import br.com.alura.clientelo.dao.CategoriaDAO;
 import br.com.alura.clientelo.dao.ClienteDAO;
 import br.com.alura.clientelo.models.Address;
 import br.com.alura.clientelo.models.Cliente;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.List;
 
-public class TestaClienteDAO {
+@SpringBootApplication
+public class TestaClienteDAO implements CommandLineRunner {
+    private final ClienteDAO clienteDAO;
+
+    public TestaClienteDAO(ClienteDAO clienteDAO) {
+        this.clienteDAO = clienteDAO;
+    }
 
 
     public static void main(String[] args) throws Exception {
-        try (EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("clientelo");){
-            EntityManager em = managerFactory.createEntityManager();
-
-            ClienteDAO clienteDAO = new ClienteDAO(em);
-            Cliente cliente1 = getCliente('1');
-            Cliente cliente2 = getCliente('2');
-            Cliente cliente3 = getCliente('3');
-
-            clienteDAO.cadastra(cliente1);
-            clienteDAO.cadastra(cliente2);
-            clienteDAO.cadastra(cliente3);
-
-            List<Cliente> clientes = clienteDAO.listaPorNome("Cliente");
-            clientes.forEach(System.out::println);
-
-            em.close();
-        }
+        SpringApplication.run(TestaPedidoDAO.class, args);
     }
 
     private static Cliente getCliente(char n) {
@@ -47,5 +36,25 @@ public class TestaClienteDAO {
         address.setRua("daora");
         cliente.setAddress(address);
         return cliente;
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        Cliente cliente1 = getCliente('1');
+        Cliente cliente2 = getCliente('2');
+        Cliente cliente3 = getCliente('3');
+
+        clienteDAO.cadastra(cliente1);
+        clienteDAO.cadastra(cliente2);
+        clienteDAO.cadastra(cliente3);
+
+        List<Cliente> clientes = clienteDAO.listaPorNome("Cliente");
+        clientes.forEach(System.out::println);
+
+        limpaBanco();
+    }
+
+    private void limpaBanco() {
+        clienteDAO.findAll().forEach(clienteDAO::remove);
     }
 }

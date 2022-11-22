@@ -5,45 +5,24 @@ import br.com.alura.clientelo.dao.ProdutoDAO;
 import br.com.alura.clientelo.models.Categoria;
 import br.com.alura.clientelo.models.CategoriaStatus;
 import br.com.alura.clientelo.models.Produto;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.math.BigDecimal;
 
-public class TestaProdutoDAO {
+@SpringBootApplication
+public class TestaProdutoDAO implements CommandLineRunner {
+    private CategoriaDAO categoriaDAO;
+    private ProdutoDAO produtoDAO;
 
+    public TestaProdutoDAO(CategoriaDAO categoriaDAO, ProdutoDAO produtoDAO) {
+        this.categoriaDAO = categoriaDAO;
+        this.produtoDAO = produtoDAO;
+    }
 
     public static void main(String[] args) throws Exception {
-        try (EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("clientelo");){
-            EntityManager em = managerFactory.createEntityManager();
-
-            Categoria celulares = novaCategoria("CELULARES");
-            Categoria info = novaCategoria("INFORMATICA");
-
-            CategoriaDAO categoriaDAO = new CategoriaDAO(em);
-            categoriaDAO.cadastra(celulares);
-            categoriaDAO.cadastra(info);
-
-            celulares = categoriaDAO.buscaPorNome("CELULARES");
-            info = categoriaDAO.buscaPorNome("INFORMATICA");
-
-            ProdutoDAO produtoDAO = new ProdutoDAO(em);
-            Produto iPhone = novoProduto("iPhone", celulares);
-            Produto xiaomi = novoProduto("xiaomi", celulares);
-            Produto pcGamer = novoProdutoIndisponivel("pc gamer", info);
-            Produto notebook = novoProdutoIndisponivel("notebook", info);
-
-            produtoDAO.cadastra(iPhone);
-            produtoDAO.cadastra(xiaomi);
-            produtoDAO.cadastra(pcGamer);
-            produtoDAO.cadastra(notebook);
-
-            produtoDAO.listaTodos().forEach(System.out::println);
-            produtoDAO.listaIndisponiveis().forEach(System.out::println);
-
-            em.close();
-        }
+        SpringApplication.run(TestaProdutoDAO.class);
     }
 
     private static Produto novoProduto(String nome, Categoria categoria) {
@@ -71,5 +50,37 @@ public class TestaProdutoDAO {
         categoria.setNome(nome);
         categoria.setStatus(CategoriaStatus.ATIVA);
         return categoria;
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        Categoria celulares = novaCategoria("CELULARES");
+        Categoria info = novaCategoria("INFORMATICA");
+
+        categoriaDAO.cadastra(celulares);
+        categoriaDAO.cadastra(info);
+
+        celulares = categoriaDAO.buscaPorNome("CELULARES");
+        info = categoriaDAO.buscaPorNome("INFORMATICA");
+
+        Produto iPhone = novoProduto("iPhone", celulares);
+        Produto xiaomi = novoProduto("xiaomi", celulares);
+        Produto pcGamer = novoProdutoIndisponivel("pc gamer", info);
+        Produto notebook = novoProdutoIndisponivel("notebook", info);
+
+        produtoDAO.cadastra(iPhone);
+        produtoDAO.cadastra(xiaomi);
+        produtoDAO.cadastra(pcGamer);
+        produtoDAO.cadastra(notebook);
+
+        produtoDAO.listaTodos().forEach(System.out::println);
+        produtoDAO.listaIndisponiveis().forEach(System.out::println);
+
+        limpaBanco();
+    }
+
+    private void limpaBanco() {
+        produtoDAO.findAll().forEach(produtoDAO::remove);
+        categoriaDAO.findAll().forEach(categoriaDAO::remove);
     }
 }
