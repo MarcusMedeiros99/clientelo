@@ -15,6 +15,13 @@ public class Categoria {
     @Enumerated(EnumType.STRING)
     private CategoriaStatus status;
 
+    public Categoria() {};
+
+    public Categoria(String nome, CategoriaStatus status) {
+        this.nome = nome;
+        this.status = status;
+    }
+
     public Long getId() {
         return id;
     }

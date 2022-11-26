@@ -3,12 +3,13 @@ package br.com.alura.clientelo.dao;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.QueryByExampleExecutor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @NoRepositoryBean
-public interface DAO <K,T> extends PagingAndSortingRepository<T,K> {
+public interface DAO <K,T> extends PagingAndSortingRepository<T,K>, QueryByExampleExecutor<T> {
 
     default void cadastra(T t) {
         save(t);
