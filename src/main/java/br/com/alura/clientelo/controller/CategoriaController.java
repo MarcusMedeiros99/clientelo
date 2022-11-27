@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/categoria")
+@RequestMapping("api/categorias")
 public class CategoriaController {
 
     @Autowired
@@ -68,7 +68,7 @@ public class CategoriaController {
         if (bindingResult.hasErrors()) return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         Categoria categoria = form.convert();
         categoriaDAO.save(categoria);
-        URI uri = uriBuilder.path("/categoria/{id}").buildAndExpand(categoria.getId()).toUri();
+        URI uri = uriBuilder.path("/api/categorias/{id}").buildAndExpand(categoria.getId()).toUri();
         CategoriaDto categoriaDto = new CategoriaDto(categoria);
 
         return ResponseEntity.created(uri).body(categoriaDto);

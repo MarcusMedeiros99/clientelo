@@ -66,4 +66,42 @@ public class Cliente {
                 ", cpf='" + cpf + '\'' +
                 '}';
     }
+
+    public static class Builder {
+
+        private String nome;
+        private Address address;
+        private String cpf;
+        private String telefone;
+
+        public Cliente build() {
+            Cliente cliente = new Cliente();
+            cliente.setNome(nome);
+            cliente.setAddress(address);
+            cliente.setCpf(cpf);
+            cliente.setTelefone(telefone);
+
+            return cliente;
+        }
+
+        public Builder withNome(String nome) {
+            this.nome = nome;
+            return this;
+        }
+
+        public Builder withCPF(String cpf) {
+            this.cpf = cpf;
+            return this;
+        }
+
+        public Builder withTelefone(String telefone) {
+            this.telefone = telefone;
+            return this;
+        }
+
+        public Builder withAddress(Address address) {
+            this.address = address;
+            return this;
+        }
+    }
 }

@@ -24,6 +24,8 @@ public class ItemPedido {
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_desconto", nullable = false)
     private TipoDescontoItemPedido tipoDesconto;
+    @Transient
+    private BigDecimal total;
 
     public Produto getProduto() {
         return produto;
@@ -79,5 +81,19 @@ public class ItemPedido {
 
     public void setTipoDesconto(TipoDescontoItemPedido tipoDesconto) {
         this.tipoDesconto = tipoDesconto;
+    }
+
+    public BigDecimal getTotal() {
+        return this.total;
+    }
+
+    public BigDecimal getTotalComDesconto() {
+        return this.total.subtract(desconto);
+    }
+
+    public void addProduto(Produto produto, Long quantidade) {
+        this.produto = produto;
+        this.quantidade = quantidade;
+        this.total = produto.getPreco().multiply(BigDecimal.valueOf(quantidade));
     }
 }

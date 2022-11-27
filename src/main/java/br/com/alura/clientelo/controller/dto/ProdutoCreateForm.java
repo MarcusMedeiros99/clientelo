@@ -10,15 +10,15 @@ import java.math.BigDecimal;
 public class ProdutoCreateForm {
     @NotNull
     @Size(min = 2)
-    public String nome;
+    private String nome;
     @NotNull
     @DecimalMin("0.00")
-    public BigDecimal preco;
-    public String descricao;
+    private BigDecimal preco;
+    private String descricao;
     @NotNull
-    public Integer quantidadeEmEstoque;
+    private Integer quantidadeEmEstoque;
     @NotNull
-    public Long categoriaId;
+    private Long categoriaId;
 
     public String getNome() {
         return nome;
@@ -36,7 +36,7 @@ public class ProdutoCreateForm {
         return quantidadeEmEstoque;
     }
 
-    public Long getCategoria_id() {
+    public Long getCategoriaId() {
         return categoriaId;
     }
 

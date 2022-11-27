@@ -16,7 +16,7 @@ public interface DAO <K,T> extends PagingAndSortingRepository<T,K>, QueryByExamp
         save(t);
     }
     default T buscaPorId(K k) {
-        return findById(k).orElseThrow(() -> new ClienteloEntityNotFoundException("Id " + k + " não encontrado"));
+        return findById(k).orElseThrow(() -> new ClienteloEntityNotFoundException("Id " + k + " não encontrado", Object.class));
     }
     default void atualiza(T t) {
         save(t);

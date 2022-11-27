@@ -1,5 +1,7 @@
 package br.com.alura.clientelo.models;
 
+import br.com.alura.clientelo.exceptions.EstoqueInsuficienteException;
+
 import javax.persistence.*;
 
 import java.math.BigDecimal;
@@ -80,6 +82,13 @@ public class Produto {
                 ", quantidadeEmEstoque=" + quantidadeEmEstoque +
                 ", categoria=" + categoria +
                 '}';
+    }
+
+    public void removeDoEstoque(Integer quantidade) {
+        if (quantidade > quantidadeEmEstoque) {
+            throw new EstoqueInsuficienteException("Produto não possui estoque suficiente");
+        }
+        this.quantidadeEmEstoque = this.quantidadeEmEstoque - quantidade;
     }
 
     public static class Builder {

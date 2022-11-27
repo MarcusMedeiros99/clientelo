@@ -22,7 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/produto")
+@RequestMapping("api/produtos")
 public class ProdutoController {
 
     @Autowired
@@ -62,7 +62,7 @@ public class ProdutoController {
         if (bindingResult.hasErrors()) return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         Produto produto = form.convert(categoriaDAO);
         produtoDAO.save(produto);
-        URI uri = uriBuilder.path("/produto/{id}").buildAndExpand(produto.getId()).toUri();
+        URI uri = uriBuilder.path("/api/produtos/{id}").buildAndExpand(produto.getId()).toUri();
         ProdutoDto produtoDto = new ProdutoDto(produto);
 
         return ResponseEntity.created(uri).body(produtoDto);

@@ -4,6 +4,7 @@ import javax.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -23,7 +24,11 @@ public class Pedido {
     @Enumerated(EnumType.STRING)
     private TipoDescontoPedido tipoDesconto;
     @OneToMany(mappedBy = "pedido")
-    private List<ItemPedido> itemPedidos;
+    private List<ItemPedido> itemPedidos = new ArrayList<>();
+    @Transient
+    private BigDecimal total = BigDecimal.ZERO;
+    @Transient
+    private BigDecimal descontosDeItens = BigDecimal.ZERO;
 
     public Long getId() {
         return id;
@@ -73,6 +78,19 @@ public class Pedido {
         this.itemPedidos = itemPedidos;
     }
 
+    public void addItemPedido(ItemPedido itemPedido) {
+        this.itemPedidos.add(itemPedido);
+        this.descontosDeItens = this.descontosDeItens.add(itemPedido.getDesconto());
+        this.total = this.total.add(itemPedido.getTotal());
+    }
+
+    public BigDecimal getTotal() {
+        return this.total;
+    }
+
+    public BigDecimal getTotalComDesconto() {
+        return this.total.subtract(desconto).subtract(descontosDeItens);
+    }
 
     @Override
     public String
@@ -83,4 +101,6 @@ public class Pedido {
                 ", cliente=" + cliente +
                 '}';
     }
+
+
 }

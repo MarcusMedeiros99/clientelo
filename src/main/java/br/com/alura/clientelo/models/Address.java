@@ -6,17 +6,17 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class Address {
     @Column(name = "rua", nullable = false, length = 50)
-    String rua;
+    private String rua;
     @Column(name = "numero", nullable = false)
-    Integer numero;
+    private Integer numero;
     @Column(name = "complemento", length = 50)
-    String complemento;
+    private String complemento;
     @Column(name = "bairro", nullable = false, length = 30)
-    String bairro;
+    private String bairro;
     @Column(name = "cidade", nullable = false, length = 30)
-    String cidade;
+    private String cidade;
     @Column(name = "estado", nullable = false, length = 2)
-    String estadoUF;
+    private String estadoUF;
 
     public String getRua() {
         return rua;

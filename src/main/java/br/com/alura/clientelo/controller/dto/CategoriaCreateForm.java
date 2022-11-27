@@ -10,7 +10,7 @@ public class CategoriaCreateForm {
 
     @NotNull
     @Size(min = 2)
-    String nome;
+    private String nome;
 
     public String getNome() {
         return nome;
