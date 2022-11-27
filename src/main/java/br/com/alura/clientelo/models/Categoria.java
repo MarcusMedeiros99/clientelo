@@ -22,6 +22,11 @@ public class Categoria {
         this.status = status;
     }
 
+    public Categoria(String nome) {
+        this.nome = nome;
+        this.status = CategoriaStatus.ATIVA;
+    }
+
     public Long getId() {
         return id;
     }

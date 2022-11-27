@@ -81,4 +81,48 @@ public class Produto {
                 ", categoria=" + categoria +
                 '}';
     }
+
+    public static class Builder {
+        BigDecimal preco;
+        String nome;
+        String descricao;
+        Integer quantidadeEmEstoque;
+        Categoria categoria;
+
+        public Produto build() {
+            Produto produto = new Produto();
+            produto.setNome(nome);
+            produto.setDescricao(descricao);
+            produto.setQuantidadeEmEstoque(quantidadeEmEstoque);
+            produto.setPreco(preco);
+            produto.setCategoria(categoria);
+
+            return produto;
+        }
+
+        public Builder withNome(String nome) {
+            this.nome = nome;
+            return this;
+        }
+
+        public Builder withDescricao(String descricao) {
+            this.descricao = descricao;
+            return this;
+        }
+
+        public Builder withPreco(BigDecimal preco) {
+            this.preco = preco;
+            return this;
+        }
+
+        public Builder withQuantidadeEmEstoque(Integer quantidadeEmEstoque) {
+            this.quantidadeEmEstoque = quantidadeEmEstoque;
+            return this;
+        }
+
+        public Builder withCategoria(Categoria categoria) {
+            this.categoria = categoria;
+            return this;
+        }
+    }
 }

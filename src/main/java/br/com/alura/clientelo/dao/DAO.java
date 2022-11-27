@@ -1,6 +1,7 @@
 package br.com.alura.clientelo.dao;
 
-import org.springframework.data.repository.CrudRepository;
+import br.com.alura.clientelo.exceptions.ClienteloEntityNotFoundException;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.QueryByExampleExecutor;
@@ -9,13 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @NoRepositoryBean
-public interface DAO <K,T> extends PagingAndSortingRepository<T,K>, QueryByExampleExecutor<T> {
+public interface DAO <K,T> extends PagingAndSortingRepository<T,K>, QueryByExampleExecutor<T>, JpaSpecificationExecutor<T> {
 
     default void cadastra(T t) {
         save(t);
     }
     default T buscaPorId(K k) {
-        return findById(k).orElseThrow(() -> new RuntimeException("Id não encontrado"));
+        return findById(k).orElseThrow(() -> new ClienteloEntityNotFoundException("Id " + k + " não encontrado"));
     }
     default void atualiza(T t) {
         save(t);

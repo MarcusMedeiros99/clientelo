@@ -6,8 +6,6 @@ import br.com.alura.clientelo.controller.dto.CategoriaCreationErrorDto;
 import br.com.alura.clientelo.dao.CategoriaDAO;
 import br.com.alura.clientelo.models.Categoria;
 import br.com.alura.clientelo.models.CategoriaStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -30,8 +28,6 @@ public class CategoriaController {
 
     @Autowired
     private CategoriaDAO categoriaDAO;
-
-    private Logger logger = LoggerFactory.getLogger(CategoriaController.class);
 
     @GetMapping
     public ResponseEntity<List<CategoriaDto>> getAll(CategoriaStatus status, String nome) {
@@ -67,7 +63,7 @@ public class CategoriaController {
         return ResponseEntity.ok(new CategoriaDto(optionalCategoria.get()));
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody CategoriaCreateForm form, BindingResult bindingResult, UriComponentsBuilder uriBuilder) {
         if (bindingResult.hasErrors()) return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         Categoria categoria = form.convert();
