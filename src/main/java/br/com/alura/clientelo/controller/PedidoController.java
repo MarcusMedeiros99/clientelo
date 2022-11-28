@@ -8,7 +8,6 @@ import br.com.alura.clientelo.exceptions.ClienteNotFoundException;
 import br.com.alura.clientelo.exceptions.EstoqueInsuficienteException;
 import br.com.alura.clientelo.exceptions.ProdutoNotFoundException;
 import br.com.alura.clientelo.models.Pedido;
-import br.com.alura.clientelo.models.Produto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

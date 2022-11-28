@@ -2,10 +2,11 @@ package br.com.alura.clientelo.controller;
 
 import br.com.alura.clientelo.controller.dto.*;
 import br.com.alura.clientelo.dao.ClienteDAO;
-import br.com.alura.clientelo.models.Categoria;
 import br.com.alura.clientelo.models.Cliente;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -15,12 +16,15 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/clientes")
 public class ClienteController {
 
+    private static final int PAGE_SIZE = 5;
     @Autowired
     private ClienteDAO clienteDAO;
 
@@ -31,6 +35,16 @@ public class ClienteController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(new ClienteDto(optionalCliente.get()));
+    }
+
+    @GetMapping
+    public ResponseEntity<ClienteListDto> list(@RequestParam(defaultValue = "0") Integer page) {
+        Page<Cliente> clientesPage = clienteDAO.findAll(PageRequest.of(page, PAGE_SIZE, Sort.by("nome")));
+
+        List<ClienteOnListDto> clientes = clientesPage.stream().map(ClienteOnListDto::new).collect(Collectors.toList());
+        ClienteListDto clientesDto = new ClienteListDto(clientes, page, clientesPage.getTotalPages(), PAGE_SIZE);
+
+        return ResponseEntity.ok(clientesDto);
     }
 
     @PostMapping

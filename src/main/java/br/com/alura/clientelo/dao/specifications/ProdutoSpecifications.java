@@ -1,6 +1,5 @@
 package br.com.alura.clientelo.dao.specifications;
 
-import br.com.alura.clientelo.dao.specifications.metamodels.Produto_;
 import br.com.alura.clientelo.models.Categoria;
 import br.com.alura.clientelo.models.Produto;
 import org.springframework.data.jpa.domain.Specification;

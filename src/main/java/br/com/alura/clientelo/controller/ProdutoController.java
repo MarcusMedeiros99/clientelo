@@ -74,6 +74,19 @@ public class ProdutoController {
         return new ProdutoCreationErrorDto("Categoria não encontrada. Nada foi feito.");
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity edit(@PathVariable Long id, @Valid @RequestBody ProdutoEditForm form, BindingResult bindingResult, UriComponentsBuilder uriBuilder) {
+        if (bindingResult.hasErrors()) return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+
+        Optional<Produto> antigoProduto = produtoDAO.findById(id);
+        if (antigoProduto.isEmpty()) return ResponseEntity.notFound().build();
+
+        Produto novoProduto = form.convert(categoriaDAO, id);
+        produtoDAO.save(novoProduto);
+
+        return ResponseEntity.ok().build();
+    }
+
 
 
 }

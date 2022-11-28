@@ -97,6 +97,7 @@ public class Produto {
         String descricao;
         Integer quantidadeEmEstoque;
         Categoria categoria;
+        Long id;
 
         public Produto build() {
             Produto produto = new Produto();
@@ -105,6 +106,7 @@ public class Produto {
             produto.setQuantidadeEmEstoque(quantidadeEmEstoque);
             produto.setPreco(preco);
             produto.setCategoria(categoria);
+            produto.setId(id);
 
             return produto;
         }
@@ -131,6 +133,11 @@ public class Produto {
 
         public Builder withCategoria(Categoria categoria) {
             this.categoria = categoria;
+            return this;
+        }
+
+        public Builder withId(Long id) {
+            this.id = id;
             return this;
         }
     }

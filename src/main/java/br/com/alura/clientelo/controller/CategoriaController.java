@@ -4,6 +4,7 @@ import br.com.alura.clientelo.controller.dto.CategoriaCreateForm;
 import br.com.alura.clientelo.controller.dto.CategoriaDto;
 import br.com.alura.clientelo.controller.dto.CategoriaCreationErrorDto;
 import br.com.alura.clientelo.dao.CategoriaDAO;
+import br.com.alura.clientelo.dao.vo.VendasPorCategoriaVO;
 import br.com.alura.clientelo.models.Categoria;
 import br.com.alura.clientelo.models.CategoriaStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,5 +79,25 @@ public class CategoriaController {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public CategoriaCreationErrorDto handleSQLIntegrityConstraintViolation (SQLIntegrityConstraintViolationException exception) {
         return new CategoriaCreationErrorDto("Categoria já existe. Nada foi feito.");
+    }
+
+    @GetMapping("/vendas")
+    public ResponseEntity<List<VendasPorCategoriaVO>> vendas() {
+        List<VendasPorCategoriaVO> vendasPorCategoria = categoriaDAO.agrupaPorCategoria();
+        return ResponseEntity.ok().body(vendasPorCategoria);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity toggleStatus(@PathVariable Long id) {
+        Optional<Categoria> optionalCategoria = categoriaDAO.findById(id);
+        if (optionalCategoria.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Categoria categoria = optionalCategoria.get();
+        categoria.toggleStatus();
+        categoriaDAO.save(categoria);
+
+        return ResponseEntity.ok().build();
     }
 }

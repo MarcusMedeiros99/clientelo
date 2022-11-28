@@ -22,7 +22,7 @@ public class VendasPorCategoriaVO {
     }
 
     public Long getQuantidade() {
-        return quantidade;
+        return quantidade == null ? 0 : quantidade;
     }
 
     public void setQuantidade(Long quantidade) {
@@ -30,7 +30,7 @@ public class VendasPorCategoriaVO {
     }
 
     public BigDecimal getMontante() {
-        return montante;
+        return montante == null? BigDecimal.ZERO.setScale(2) : montante;
     }
 
     public void setMontante(BigDecimal montante) {

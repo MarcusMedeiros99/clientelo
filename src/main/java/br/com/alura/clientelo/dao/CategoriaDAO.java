@@ -2,8 +2,6 @@ package br.com.alura.clientelo.dao;
 
 import br.com.alura.clientelo.dao.vo.VendasPorCategoriaVO;
 import br.com.alura.clientelo.models.Categoria;
-import br.com.alura.clientelo.models.CategoriaStatus;
-import org.springframework.beans.PropertyValues;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -21,7 +19,7 @@ public interface CategoriaDAO extends DAO<Long, Categoria> {
             "Pedido p " +
             "JOIN ItemPedido ip on ip.pedido = p " +
             "JOIN Produto pr on ip.produto = pr " +
-            "JOIN Categoria c on pr.categoria = c group by c.nome")
+            "RIGHT JOIN Categoria c on pr.categoria = c group by c.nome")
     List<VendasPorCategoriaVO> agrupaPorCategoria();
 
 }

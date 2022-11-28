@@ -59,4 +59,16 @@ public class Categoria {
                 ", status=" + status +
                 '}';
     }
+
+    public CategoriaStatus toggleStatus() {
+        switch (status) {
+            case ATIVA -> {
+                status = CategoriaStatus.INATIVA;
+            }
+            case INATIVA -> {
+                status = CategoriaStatus.ATIVA;
+            }
+        }
+        return status;
+    }
 }
