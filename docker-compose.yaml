@@ -1,6 +1,19 @@
 version: "3.7"
 
 services:
+  clientelo:
+    build: .
+    working_dir: /usr/src/clientelo
+    volumes:
+      - ./:/usr/src/clientelo
+      - ./target:/usr/src/clientelo/target
+      - $HOME/.m2:/root/.m2
+    command: mvn spring-boot:run
+    ports:
+      - "8080:8080"
+    depends_on:
+      - clientelo-db
+
   clientelo-db:
     image: mysql:8.0
     ports:

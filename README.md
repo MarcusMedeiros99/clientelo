@@ -1,6 +1,8 @@
 # ClientELO
 
-- Use `docker-compose up` antes de rodar os testes de DAO para subir um banco de dados mysql
+- Use `docker-compose up` para iniciar a aplicação
+- O banco de dados fica exposto em localhost:33006
+- A aplicação fica exposta em localhost:8080
 
 ## Informações gerais dos pedidos em _pedidos.csv_
 - Campos: **CATEGORIA, PRODUTO, PREÇO, QUANTIDADE, DATA, CLIENTE**
