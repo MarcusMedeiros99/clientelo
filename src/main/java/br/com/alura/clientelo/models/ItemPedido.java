@@ -17,7 +17,7 @@ public class ItemPedido {
     private Long quantidade;
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private Pedido pedido;
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false)
     private Produto produto;
     @Column(name = "desconto", scale = 2, nullable = false)
     private BigDecimal desconto;
@@ -84,16 +84,20 @@ public class ItemPedido {
     }
 
     public BigDecimal getTotal() {
+        if (total == null) {
+            this.total = produto.getPreco().multiply(BigDecimal.valueOf(quantidade));
+        }
         return this.total;
     }
 
     public BigDecimal getTotalComDesconto() {
-        return this.total.subtract(desconto);
+        return this.getTotal().subtract(desconto);
     }
 
     public void addProduto(Produto produto, Long quantidade) {
         this.produto = produto;
         this.quantidade = quantidade;
         this.total = produto.getPreco().multiply(BigDecimal.valueOf(quantidade));
+        this.precoUnitario = produto.getPreco();
     }
 }

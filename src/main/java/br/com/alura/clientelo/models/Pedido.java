@@ -23,12 +23,14 @@ public class Pedido {
     @Column(name = "tipo_desconto", nullable = false)
     @Enumerated(EnumType.STRING)
     private TipoDescontoPedido tipoDesconto;
-    @OneToMany(mappedBy = "pedido")
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     private List<ItemPedido> itemPedidos = new ArrayList<>();
     @Transient
-    private BigDecimal total = BigDecimal.ZERO;
+    private BigDecimal total;
     @Transient
-    private BigDecimal descontosDeItens = BigDecimal.ZERO;
+    private BigDecimal descontosDeItens ;
+    @Transient
+    private Long quantidadeDeItems;
 
     public Long getId() {
         return id;
@@ -76,20 +78,54 @@ public class Pedido {
 
     public void setItemPedidos(List<ItemPedido> itemPedidos) {
         this.itemPedidos = itemPedidos;
+        this.descontosDeItens = itemPedidos.stream().map(ItemPedido::getDesconto).reduce(BigDecimal.ZERO, BigDecimal::add);
+        this.total = itemPedidos.stream().map(ItemPedido::getTotal).reduce(BigDecimal.ZERO, BigDecimal::add);
+        this.quantidadeDeItems = itemPedidos.stream().map(ItemPedido::getQuantidade).reduce(0l, Long::sum);
     }
 
     public void addItemPedido(ItemPedido itemPedido) {
         this.itemPedidos.add(itemPedido);
-        this.descontosDeItens = this.descontosDeItens.add(itemPedido.getDesconto());
-        this.total = this.total.add(itemPedido.getTotal());
+        this.descontosDeItens = this.getDescontosDeItens().add(itemPedido.getDesconto());
+        this.total = this.getTotal().add(itemPedido.getTotal());
+        this.quantidadeDeItems = this.getQuantidadeDeItens() + itemPedido.getQuantidade();
+        itemPedido.setPedido(this);
     }
 
     public BigDecimal getTotal() {
+        if (total == null) {
+            this.total = itemPedidos.stream()
+                    .filter(itemPedido -> itemPedido != null)
+                    .map(ItemPedido::getTotal).reduce(BigDecimal.ZERO, BigDecimal::add);
+        }
         return this.total;
     }
 
     public BigDecimal getTotalComDesconto() {
-        return this.total.subtract(desconto).subtract(descontosDeItens);
+        return this.getTotal().subtract(desconto).subtract(this.getDescontosDeItens());
+    }
+
+    private BigDecimal getDescontosDeItens() {
+        if (descontosDeItens == null) {
+            this.descontosDeItens =
+                    itemPedidos.stream()
+                            .filter(itemPedido -> itemPedido != null)
+                            .map(ItemPedido::getDesconto).reduce(BigDecimal.ZERO, BigDecimal::add);
+        }
+        return descontosDeItens;
+    }
+
+    public BigDecimal getDescontoTotal() {
+        return this.desconto.add(getDescontosDeItens());
+    }
+
+    public Long getQuantidadeDeItens() {
+        if (quantidadeDeItems == null) {
+            this.quantidadeDeItems =
+                    itemPedidos.stream()
+                            .filter(itemPedido -> itemPedido != null)
+                            .map(ItemPedido::getQuantidade).reduce(0l, Long::sum);
+        }
+        return this.quantidadeDeItems;
     }
 
     @Override

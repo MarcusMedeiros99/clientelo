@@ -116,9 +116,8 @@ public class TestaPedidoDAO implements CommandLineRunner {
 
 
 
-        itemPedido.setProduto(produto);
+        itemPedido.addProduto(produto, quantidade);
         itemPedido.setDesconto(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
-        itemPedido.setQuantidade(quantidade);
         itemPedido.setPrecoUnitario(BigDecimal.TEN.setScale(2, RoundingMode.HALF_UP));
         itemPedido.setTipoDesconto(TipoDescontoItemPedido.NENHUM);
         itemPedidos.add(itemPedido);
@@ -146,6 +145,7 @@ public class TestaPedidoDAO implements CommandLineRunner {
         produtoDAO.cadastra(produtos[0]);
         produtoDAO.cadastra(produtos[1]);
         produtoDAO.cadastra(produtos[2]);
+
 
         Pedido[] pedidos = new Pedido[4];
         for (int i = 0; i < 4; i++) {
