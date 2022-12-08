@@ -1,6 +1,10 @@
 package br.com.alura.clientelo.controller;
 
 import br.com.alura.clientelo.controller.dto.*;
+import br.com.alura.clientelo.controller.dto.error.ClienteNotFoundErrorDto;
+import br.com.alura.clientelo.controller.dto.error.EstoqueInsuficienteErrorDto;
+import br.com.alura.clientelo.controller.dto.error.ProdutoNotFoundErrorDto;
+import br.com.alura.clientelo.controller.form.PedidoCreateForm;
 import br.com.alura.clientelo.dao.ClienteDAO;
 import br.com.alura.clientelo.dao.PedidoDAO;
 import br.com.alura.clientelo.dao.ProdutoDAO;
@@ -8,7 +12,9 @@ import br.com.alura.clientelo.exceptions.ClienteNotFoundException;
 import br.com.alura.clientelo.exceptions.EstoqueInsuficienteException;
 import br.com.alura.clientelo.exceptions.ProdutoNotFoundException;
 import br.com.alura.clientelo.models.Pedido;
+import br.com.alura.clientelo.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -35,6 +41,8 @@ public class PedidoController {
     private ProdutoDAO produtoDAO;
     @Autowired
     private PedidoDAO pedidoDAO;
+    @Autowired
+    private PedidoService pedidoService;
 
     private final static int PAGE_SIZE = 5;
 
@@ -63,9 +71,10 @@ public class PedidoController {
 
     @PostMapping
     @Transactional
+    @CacheEvict("categoriaVendas")
     public ResponseEntity<?> create(@Valid @RequestBody PedidoCreateForm form, BindingResult bindingResult, UriComponentsBuilder uriBuilder) {
         if (bindingResult.hasErrors()) return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
-        Pedido pedido = form.convert(clienteDAO, produtoDAO, pedidoDAO);
+        Pedido pedido = pedidoService.convert(form);
         pedidoDAO.save(pedido);
         URI uri = uriBuilder.path("/api/pedidos/{id}").buildAndExpand(pedido.getId()).toUri();
         PedidoDTO pedidoDTO = new PedidoDTO(pedido);

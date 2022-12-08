@@ -4,14 +4,6 @@
 - O banco de dados fica exposto em localhost:33006
 - A aplicação fica exposta em localhost:8080
 
-## Informações gerais dos pedidos em _pedidos.csv_
-- Campos: **CATEGORIA, PRODUTO, PREÇO, QUANTIDADE, DATA, CLIENTE**
+# Documentação
 
-
-### RELATÓRIO DE VALORES TOTAIS
-- TOTAL DE PEDIDOS REALIZADOS: 16
-- TOTAL DE PRODUTOS VENDIDOS: 35
-- TOTAL DE CATEGORIAS: 5
-- MONTANTE DE VENDAS: R$ 178.374,49
-- PEDIDO MAIS BARATO: R$ 95,17 (Clean Code)
-- PEDIDO MAIS CARO: R$ 55.056,00 (iPhone 13 Pro)
+A documentação feita via Swagger fica exposta em localhost:8080/swagger-ui/index.html

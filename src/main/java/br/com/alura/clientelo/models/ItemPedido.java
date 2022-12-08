@@ -27,36 +27,40 @@ public class ItemPedido {
     @Transient
     private BigDecimal total;
 
-    public Produto getProduto() {
-        return produto;
+    public ItemPedido() {}
+
+    public ItemPedido(Pedido pedido, Produto produto, Long quantidade) {
+        this.pedido = pedido;
+        this.desconto = BigDecimal.ZERO;
+        this.tipoDesconto = TipoDescontoItemPedido.NENHUM;
+        addProduto(produto,quantidade);
     }
 
-    public void setProduto(Produto produto) {
-        this.produto = produto;
+    public Produto getProduto() {
+        return produto;
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public BigDecimal getPrecoUnitario() {
         return precoUnitario;
     }
 
-    public void setPrecoUnitario(BigDecimal precoUnitario) {
-        this.precoUnitario = precoUnitario;
-    }
 
     public Long getQuantidade() {
         return quantidade;
     }
 
-    public void setQuantidade(Long quantidade) {
+    private void setQuantidade(Long quantidade) {
         this.quantidade = quantidade;
+        if (quantidade > 10) this.tipoDesconto = TipoDescontoItemPedido.QUANTIDADE;
+    }
+
+    private BigDecimal calculaDescontoQuantidade() {
+        return getTotal()
+                .multiply(BigDecimal.valueOf(0.10));
     }
 
     public Pedido getPedido() {
@@ -68,7 +72,9 @@ public class ItemPedido {
     }
 
     public BigDecimal getDesconto() {
-        return desconto;
+        if (tipoDesconto.equals(TipoDescontoItemPedido.QUANTIDADE))
+            return calculaDescontoQuantidade();
+        return BigDecimal.ZERO;
     }
 
     public void setDesconto(BigDecimal desconto) {
@@ -96,8 +102,9 @@ public class ItemPedido {
 
     public void addProduto(Produto produto, Long quantidade) {
         this.produto = produto;
-        this.quantidade = quantidade;
         this.total = produto.getPreco().multiply(BigDecimal.valueOf(quantidade));
         this.precoUnitario = produto.getPreco();
+        setQuantidade(quantidade);
+        produto.removeDoEstoque(quantidade.intValue());
     }
 }

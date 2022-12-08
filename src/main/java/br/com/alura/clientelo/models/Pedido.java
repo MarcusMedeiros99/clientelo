@@ -28,9 +28,18 @@ public class Pedido {
     @Transient
     private BigDecimal total;
     @Transient
-    private BigDecimal descontosDeItens ;
+    private BigDecimal descontosDeItens;
     @Transient
     private Long quantidadeDeItems;
+
+    public Pedido() {}
+
+    public Pedido(Cliente cliente) {
+        this.data = LocalDate.now();
+        this.desconto = BigDecimal.ZERO;
+        this.tipoDesconto = TipoDescontoPedido.NENHUM;
+        setCliente(cliente);
+    }
 
     public Long getId() {
         return id;
@@ -54,10 +63,16 @@ public class Pedido {
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
+        if (cliente.getPedidos().size() >= 5l) {
+            setTipoDesconto(TipoDescontoPedido.FIDELIDADE);
+        }
     }
 
     public BigDecimal getDesconto() {
-        return desconto;
+        if (TipoDescontoPedido.FIDELIDADE.equals(tipoDesconto))
+            return calculaDescontoFidelidade();
+
+        return BigDecimal.ZERO;
     }
 
     public void setDesconto(BigDecimal desconto) {
@@ -83,12 +98,15 @@ public class Pedido {
         this.quantidadeDeItems = itemPedidos.stream().map(ItemPedido::getQuantidade).reduce(0l, Long::sum);
     }
 
-    public void addItemPedido(ItemPedido itemPedido) {
+    public void addItemPedido(Produto produto, Long quantidade) {
+        ItemPedido itemPedido = new ItemPedido(this,produto,quantidade);
         this.itemPedidos.add(itemPedido);
-        this.descontosDeItens = this.getDescontosDeItens().add(itemPedido.getDesconto());
-        this.total = this.getTotal().add(itemPedido.getTotal());
         this.quantidadeDeItems = this.getQuantidadeDeItens() + itemPedido.getQuantidade();
         itemPedido.setPedido(this);
+
+        if (tipoDesconto.equals(TipoDescontoPedido.FIDELIDADE)) {
+            setDesconto(calculaDescontoFidelidade());
+        }
     }
 
     public BigDecimal getTotal() {
@@ -101,7 +119,7 @@ public class Pedido {
     }
 
     public BigDecimal getTotalComDesconto() {
-        return this.getTotal().subtract(desconto).subtract(this.getDescontosDeItens());
+        return getTotal().subtract(getDesconto()).subtract(getDescontosDeItens());
     }
 
     private BigDecimal getDescontosDeItens() {
@@ -115,7 +133,7 @@ public class Pedido {
     }
 
     public BigDecimal getDescontoTotal() {
-        return this.desconto.add(getDescontosDeItens());
+        return getDesconto().add(getDescontosDeItens());
     }
 
     public Long getQuantidadeDeItens() {
@@ -139,4 +157,16 @@ public class Pedido {
     }
 
 
+    public void addItemPedido(ItemPedido itemPedido) {
+        this.itemPedidos.add(itemPedido);
+        this.quantidadeDeItems = this.getQuantidadeDeItens() + itemPedido.getQuantidade();
+
+        if (tipoDesconto.equals(TipoDescontoPedido.FIDELIDADE))
+            setDesconto(calculaDescontoFidelidade());
+        itemPedido.setPedido(this);
+    }
+
+    private BigDecimal calculaDescontoFidelidade() {
+        return getTotal().subtract(getDescontosDeItens()).multiply(BigDecimal.valueOf(0.05));
+    }
 }

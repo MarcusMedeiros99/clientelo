@@ -1,17 +1,22 @@
 package br.com.alura.clientelo.controller;
 
-import br.com.alura.clientelo.controller.dto.CategoriaCreateForm;
+import br.com.alura.clientelo.controller.form.CategoriaCreateForm;
 import br.com.alura.clientelo.controller.dto.CategoriaDto;
-import br.com.alura.clientelo.controller.dto.CategoriaCreationErrorDto;
+import br.com.alura.clientelo.controller.dto.error.CategoriaCreationErrorDto;
 import br.com.alura.clientelo.dao.CategoriaDAO;
 import br.com.alura.clientelo.dao.vo.VendasPorCategoriaVO;
 import br.com.alura.clientelo.models.Categoria;
 import br.com.alura.clientelo.models.CategoriaStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -29,6 +34,7 @@ public class CategoriaController {
 
     @Autowired
     private CategoriaDAO categoriaDAO;
+    private Logger logger = LoggerFactory.getLogger(CategoriaController.class);
 
     @GetMapping
     public ResponseEntity<List<CategoriaDto>> getAll(CategoriaStatus status, String nome) {
@@ -65,6 +71,8 @@ public class CategoriaController {
     }
 
     @PostMapping
+    @Transactional
+    @CacheEvict("categoriaVendas")
     public ResponseEntity<?> create(@Valid @RequestBody CategoriaCreateForm form, BindingResult bindingResult, UriComponentsBuilder uriBuilder) {
         if (bindingResult.hasErrors()) return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         Categoria categoria = form.convert();
@@ -82,12 +90,15 @@ public class CategoriaController {
     }
 
     @GetMapping("/vendas")
+    @Cacheable("categoriaVendas")
     public ResponseEntity<List<VendasPorCategoriaVO>> vendas() {
+        logger.info("request at endpoint GET api/categorias/vendas");
         List<VendasPorCategoriaVO> vendasPorCategoria = categoriaDAO.agrupaPorCategoria();
         return ResponseEntity.ok().body(vendasPorCategoria);
     }
 
     @PatchMapping("/{id}")
+    @Transactional
     public ResponseEntity toggleStatus(@PathVariable Long id) {
         Optional<Categoria> optionalCategoria = categoriaDAO.findById(id);
         if (optionalCategoria.isEmpty()) {

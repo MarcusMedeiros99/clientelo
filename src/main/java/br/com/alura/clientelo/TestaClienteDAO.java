@@ -1,20 +1,28 @@
 package br.com.alura.clientelo;
 
 import br.com.alura.clientelo.dao.ClienteDAO;
+import br.com.alura.clientelo.dao.UsuarioDAO;
 import br.com.alura.clientelo.models.Address;
 import br.com.alura.clientelo.models.Cliente;
+import br.com.alura.clientelo.models.Usuario;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
 @SpringBootApplication
 public class TestaClienteDAO implements CommandLineRunner {
     private final ClienteDAO clienteDAO;
+    private final UsuarioDAO usuarioDAO;
+    @Autowired
+    private PasswordEncoder encoder;
 
-    public TestaClienteDAO(ClienteDAO clienteDAO) {
+    public TestaClienteDAO(ClienteDAO clienteDAO, UsuarioDAO usuarioDAO) {
         this.clienteDAO = clienteDAO;
+        this.usuarioDAO = usuarioDAO;
     }
 
 
@@ -22,7 +30,7 @@ public class TestaClienteDAO implements CommandLineRunner {
         SpringApplication.run(TestaPedidoDAO.class, args);
     }
 
-    private static Cliente getCliente(char n) {
+    public Cliente getCliente(char n) {
         Cliente cliente = new Cliente();
         cliente.setNome("Cliente Elo" + n);
         cliente.setCpf("1111111111" + n);
@@ -35,6 +43,11 @@ public class TestaClienteDAO implements CommandLineRunner {
         address.setNumero(99);
         address.setRua("daora");
         cliente.setAddress(address);
+
+        Usuario usuario = new Usuario("email" + n + "@provider", encoder.encode("123456"));
+
+        cliente.setUsuario(usuario);
+
         return cliente;
     }
 

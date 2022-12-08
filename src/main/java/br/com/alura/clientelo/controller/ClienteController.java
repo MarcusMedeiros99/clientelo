@@ -1,14 +1,22 @@
 package br.com.alura.clientelo.controller;
 
 import br.com.alura.clientelo.controller.dto.*;
+import br.com.alura.clientelo.controller.dto.error.ClienteCreationErrorDto;
+import br.com.alura.clientelo.controller.form.ClienteCreateForm;
 import br.com.alura.clientelo.dao.ClienteDAO;
+import br.com.alura.clientelo.dao.UsuarioDAO;
+import br.com.alura.clientelo.dao.UsuarioRoleDAO;
 import br.com.alura.clientelo.models.Cliente;
+import br.com.alura.clientelo.models.RoleEnum;
+import br.com.alura.clientelo.models.UsuarioRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -27,6 +35,12 @@ public class ClienteController {
     private static final int PAGE_SIZE = 5;
     @Autowired
     private ClienteDAO clienteDAO;
+    @Autowired
+    private PasswordEncoder encoder;
+    @Autowired
+    private UsuarioRoleDAO roleDAO;
+    @Autowired
+    private UsuarioDAO usuarioDAO;
 
     @GetMapping("/{id}")
     public ResponseEntity<ClienteDto> getById(@PathVariable Long id) {
@@ -48,9 +62,16 @@ public class ClienteController {
     }
 
     @PostMapping
+    @Transactional
     public ResponseEntity<?> create(@Valid @RequestBody ClienteCreateForm form, BindingResult bindingResult, UriComponentsBuilder uriBuilder) {
         if (bindingResult.hasErrors()) return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
-        Cliente cliente = form.convert();
+        if (usuarioDAO.existsByEmail(form.getEmail())) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        UsuarioRole role = roleDAO.findByName(RoleEnum.USUARIO_ROLE)
+                .orElseThrow(() -> new RuntimeException("role USUARIO_ROLE não existe"));
+        Cliente cliente = form.convert(encoder, role);
         clienteDAO.save(cliente);
         URI uri = uriBuilder.path("/api/clientes/{id}").buildAndExpand(cliente.getId()).toUri();
         ClienteDto clienteDto = new ClienteDto(cliente);

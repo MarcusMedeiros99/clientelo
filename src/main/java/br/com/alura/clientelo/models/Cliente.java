@@ -1,6 +1,9 @@
 package br.com.alura.clientelo.models;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Entity
 @Table(name = "CLIENTE")
@@ -9,6 +12,8 @@ public class Cliente {
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @OneToOne(optional = false, cascade = CascadeType.ALL)
+    private Usuario usuario;
     @Column(name = "nome", nullable = false)
     private String nome;
     @Column(name = "cpf", nullable = false, columnDefinition = "CHAR(11)", unique = true)
@@ -17,6 +22,8 @@ public class Cliente {
     private String telefone;
     @Embedded
     private Address address;
+    @OneToMany(mappedBy = "cliente")
+    private List<Pedido> pedidos = new ArrayList<>();
 
     public String getNome() {
         return nome;
@@ -24,6 +31,14 @@ public class Cliente {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public String getCpf() {
@@ -58,6 +73,10 @@ public class Cliente {
         this.id = id;
     }
 
+    public List<Pedido> getPedidos() {
+        return Collections.unmodifiableList(pedidos);
+    }
+
     @Override
     public String toString() {
         return "Cliente{" +
@@ -73,6 +92,10 @@ public class Cliente {
         private Address address;
         private String cpf;
         private String telefone;
+        private Usuario usuario;
+        private String email;
+        private String password;
+        private UsuarioRole role;
 
         public Cliente build() {
             Cliente cliente = new Cliente();
@@ -80,6 +103,9 @@ public class Cliente {
             cliente.setAddress(address);
             cliente.setCpf(cpf);
             cliente.setTelefone(telefone);
+            usuario = new Usuario(email, password);
+            usuario.addRole(role);
+            cliente.setUsuario(usuario);
 
             return cliente;
         }
@@ -101,6 +127,21 @@ public class Cliente {
 
         public Builder withAddress(Address address) {
             this.address = address;
+            return this;
+        }
+
+        public Builder withEmail(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public Builder withRole(UsuarioRole role) {
+            this.role = role;
+            return this;
+        }
+
+        public Builder withPassword(String password) {
+            this.password = password;
             return this;
         }
     }

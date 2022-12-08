@@ -1,4 +1,4 @@
-package br.com.alura.clientelo.controller.dto;
+package br.com.alura.clientelo.controller.form;
 
 import br.com.alura.clientelo.models.Categoria;
 import br.com.alura.clientelo.models.CategoriaStatus;

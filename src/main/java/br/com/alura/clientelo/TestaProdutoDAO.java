@@ -46,9 +46,7 @@ public class TestaProdutoDAO implements CommandLineRunner {
     }
 
     private static Categoria novaCategoria(String nome) {
-        Categoria categoria = new Categoria();
-        categoria.setNome(nome);
-        categoria.setStatus(CategoriaStatus.ATIVA);
+        Categoria categoria = new Categoria(nome);
         return categoria;
     }
 

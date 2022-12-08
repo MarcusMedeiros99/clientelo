@@ -32,23 +32,7 @@ public class ItemPedidoDto {
 
         Produto produto = optionalProduto.get();
         
-        ItemPedido itemPedido = new ItemPedido();
-        itemPedido.setPedido(pedido);
-        itemPedido.addProduto(produto, quantidade);
-        itemPedido.setTipoDesconto(TipoDescontoItemPedido.NENHUM);
-        itemPedido.setDesconto(BigDecimal.ZERO);
-
-        produto.removeDoEstoque(quantidade.intValue());
-
-        if (quantidade > 10) {
-            itemPedido.setTipoDesconto(TipoDescontoItemPedido.QUANTIDADE);
-            itemPedido.setDesconto(
-                    produto
-                            .getPreco()
-                            .multiply(BigDecimal.valueOf(quantidade))
-                            .multiply(BigDecimal.valueOf(0.10))
-            );
-        }
+        ItemPedido itemPedido = new ItemPedido(pedido, produto, quantidade);
 
         return itemPedido;
     }

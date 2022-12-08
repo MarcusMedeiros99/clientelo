@@ -1,15 +1,21 @@
 package br.com.alura.clientelo.controller;
 
 import br.com.alura.clientelo.controller.dto.*;
+import br.com.alura.clientelo.controller.dto.error.ProdutoCreationErrorDto;
+import br.com.alura.clientelo.controller.form.ProdutoCreateForm;
+import br.com.alura.clientelo.controller.form.ProdutoEditForm;
 import br.com.alura.clientelo.dao.CategoriaDAO;
 import br.com.alura.clientelo.dao.ProdutoDAO;
 import br.com.alura.clientelo.dao.specifications.ProdutoSpecifications;
 import br.com.alura.clientelo.exceptions.ClienteloEntityNotFoundException;
 import br.com.alura.clientelo.models.Produto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -25,6 +31,8 @@ import java.util.stream.Collectors;
 @RequestMapping("api/produtos")
 public class ProdutoController {
 
+    private Logger logger = LoggerFactory.getLogger(ProdutoController.class);
+
     @Autowired
     private ProdutoDAO produtoDAO;
 
@@ -38,7 +46,10 @@ public class ProdutoController {
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "") String nome,
             @RequestParam(defaultValue = "") String nomeCategoria,
-            BigDecimal minPreco, BigDecimal maxPreco) {
+            @RequestParam(required = false) BigDecimal minPreco,
+            @RequestParam(required = false) BigDecimal maxPreco) {
+
+        logger.info("request at endpoint GET api/produtos");
 
         Page<Produto> produtosPage = produtoDAO.findAll(
                 ProdutoSpecifications.filter(nome, nomeCategoria, minPreco, maxPreco),
@@ -58,6 +69,7 @@ public class ProdutoController {
     }
 
     @PostMapping
+    @Transactional
     public ResponseEntity<?> create(@Valid @RequestBody ProdutoCreateForm form, BindingResult bindingResult, UriComponentsBuilder uriBuilder) {
         if (bindingResult.hasErrors()) return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         Produto produto = form.convert(categoriaDAO);
@@ -75,6 +87,7 @@ public class ProdutoController {
     }
 
     @PutMapping("/{id}")
+    @Transactional
     public ResponseEntity edit(@PathVariable Long id, @Valid @RequestBody ProdutoEditForm form, BindingResult bindingResult, UriComponentsBuilder uriBuilder) {
         if (bindingResult.hasErrors()) return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
 

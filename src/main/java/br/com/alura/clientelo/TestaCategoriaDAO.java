@@ -11,7 +11,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 
 @SpringBootApplication
-@EnableJpaRepositories(repositoryImplementationPostfix = "ClienteloDAO")
 public class TestaCategoriaDAO implements CommandLineRunner {
 
     private final CategoriaDAO categoriaDAO;
@@ -25,9 +24,7 @@ public class TestaCategoriaDAO implements CommandLineRunner {
     }
 
     private static Categoria novaCategoria(String nome) {
-        Categoria categoria = new Categoria();
-        categoria.setNome(nome);
-        categoria.setStatus(CategoriaStatus.ATIVA);
+        Categoria categoria = new Categoria(nome);
         return categoria;
     }
 
@@ -41,7 +38,6 @@ public class TestaCategoriaDAO implements CommandLineRunner {
         categoriaDAO.cadastra(eletro);
         categoriaDAO.cadastra(celulares);
 
-        celulares.setStatus(CategoriaStatus.INATIVA);
 
         categoriaDAO.atualiza(celulares);
         categoriaDAO.listaTodos().forEach(System.out::println);

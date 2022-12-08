@@ -39,17 +39,17 @@ public class Categoria {
         return nome;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+//    public void setNome(String nome) {
+//        this.nome = nome;
+//    }
 
     public CategoriaStatus getStatus() {
         return status;
     }
 
-    public void setStatus(CategoriaStatus status) {
-        this.status = status;
-    }
+//    public void setStatus(CategoriaStatus status) {
+//        this.status = status;
+//    }
 
     @Override
     public String toString() {

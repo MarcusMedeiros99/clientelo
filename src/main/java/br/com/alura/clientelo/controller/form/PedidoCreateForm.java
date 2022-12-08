@@ -1,5 +1,6 @@
-package br.com.alura.clientelo.controller.dto;
+package br.com.alura.clientelo.controller.form;
 
+import br.com.alura.clientelo.controller.dto.ItemPedidoDto;
 import br.com.alura.clientelo.dao.ClienteDAO;
 import br.com.alura.clientelo.dao.PedidoDAO;
 import br.com.alura.clientelo.dao.ProdutoDAO;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.ExampleMatcher;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +27,7 @@ public class PedidoCreateForm {
     }
 
     public List<ItemPedidoDto> getItems() {
-        return items;
+        return Collections.unmodifiableList(items);
     }
 
     public Pedido convert(ClienteDAO clienteDAO, ProdutoDAO produtoDAO, PedidoDAO pedidoDAO) {
@@ -54,16 +56,9 @@ public class PedidoCreateForm {
     }
 
     private Pedido criaPedido(Cliente cliente, ProdutoDAO produtoDAO) {
-        Pedido pedido = new Pedido();
-
-        pedido.setData(LocalDate.now());
-        pedido.setTipoDesconto(TipoDescontoPedido.NENHUM);
-        pedido.setDesconto(BigDecimal.ZERO);
-        pedido.setCliente(cliente);
-
+        Pedido pedido = new Pedido(cliente);
         items.stream()
-                .map(itemPedidoDto -> itemPedidoDto.convert(produtoDAO, pedido))
-                .forEach(pedido::addItemPedido);
+                .map(itemPedidoDto -> itemPedidoDto.convert(produtoDAO, pedido));
 
         return pedido;
     }

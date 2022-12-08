@@ -25,6 +25,16 @@ public class Produto {
     @JoinColumn(name = "categoria_id", nullable = false)
     private Categoria categoria;
 
+    public Produto() {}
+
+    public Produto(String nome, Categoria categoria, BigDecimal preco, String descricao, Integer quantidadeEmEstoque) {
+        this.nome = nome;
+        this.categoria = categoria;
+        this.preco = preco;
+        this.descricao = descricao;
+        this.quantidadeEmEstoque = quantidadeEmEstoque;
+    }
+
     public Long getId() {
         return id;
     }

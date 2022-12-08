@@ -1,4 +1,4 @@
-package br.com.alura.clientelo.controller.dto;
+package br.com.alura.clientelo.controller.dto.error;
 
 public class ProdutoNotFoundErrorDto extends ErrorDto {
 

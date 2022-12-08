@@ -1,12 +1,11 @@
-package br.com.alura.clientelo.controller.dto;
+package br.com.alura.clientelo.controller.form;
 
 import br.com.alura.clientelo.models.Address;
 import br.com.alura.clientelo.models.Cliente;
+import br.com.alura.clientelo.models.UsuarioRole;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 public class ClienteCreateForm {
     @NotNull @NotEmpty
@@ -30,6 +29,12 @@ public class ClienteCreateForm {
     @NotNull
     @Size(min = 2, max = 2)
     private String estado;
+    @NotNull
+    @Email
+    private String email;
+    @NotNull
+    @Size(min = 8)
+    private String password;
 
     public String getNome() {
         return nome;
@@ -67,7 +72,15 @@ public class ClienteCreateForm {
         return estado;
     }
 
-    public Cliente convert() {
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public Cliente convert(PasswordEncoder encoder, UsuarioRole role) {
         Address address = new Address();
         address.setEstadoUF(estado);
         address.setRua(rua);
@@ -82,6 +95,9 @@ public class ClienteCreateForm {
                 .withCPF(cpf)
                 .withTelefone(telefone)
                 .withAddress(address)
+                .withPassword(encoder.encode(password))
+                .withRole(role)
+                .withEmail(email)
                 .build();
     }
 }

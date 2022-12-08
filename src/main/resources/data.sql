@@ -1,0 +1,1 @@
+insert into ROLE (name) value ("USUARIO_ROLE");

@@ -7,9 +7,11 @@ import br.com.alura.clientelo.dao.ProdutoDAO;
 import br.com.alura.clientelo.dao.vo.ClienteFielVO;
 import br.com.alura.clientelo.dao.vo.VendasPorCategoriaVO;
 import br.com.alura.clientelo.models.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -23,6 +25,9 @@ public class TestaPedidoDAO implements CommandLineRunner {
     private final ClienteDAO clienteDAO;
     private final CategoriaDAO categoriaDAO;
     private final ProdutoDAO produtoDAO;
+
+    @Autowired
+    private PasswordEncoder encoder;
 
     public TestaPedidoDAO(PedidoDAO pedidoDAO, ClienteDAO clienteDAO, CategoriaDAO categoriaDAO, ProdutoDAO produtoDAO) {
         this.pedidoDAO = pedidoDAO;
@@ -80,48 +85,29 @@ public class TestaPedidoDAO implements CommandLineRunner {
 
         cliente.setAddress(address);
 
+        Usuario usuario = new Usuario("email" + i + "@provider", encoder.encode("123456"));
+
+        cliente.setUsuario(usuario);
+
         return cliente;
     }
 
     private static Categoria criaCategoria(String nome) {
-        Categoria categoria = new Categoria();
-        categoria.setStatus(CategoriaStatus.ATIVA);
-        categoria.setNome(nome);
+        Categoria categoria = new Categoria(nome);
 
         return categoria;
     }
 
     private static Produto criaProduto(String nome, Categoria categoria) {
-        Produto produto = new Produto();
-        produto.setPreco(BigDecimal.TEN.setScale(2, RoundingMode.HALF_UP));
-        produto.setDescricao("produto bom");
-        produto.setCategoria(categoria);
-        produto.setQuantidadeEmEstoque(20);
-        produto.setNome(nome);
+        Produto produto = new Produto(nome, categoria, BigDecimal.TEN, "produto bom", 20);
 
         return produto;
     }
 
     private static Pedido criaPedido(Cliente cliente, Produto produto, Long quantidade) {
-        Pedido pedido = new Pedido();
-        pedido.setCliente(cliente);
-        pedido.setData(LocalDate.now());
-        pedido.setDesconto(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
-        pedido.setTipoDesconto(TipoDescontoPedido.NENHUM);
+        Pedido pedido = new Pedido(cliente);
 
-
-        List<ItemPedido> itemPedidos = new ArrayList<>();
-        ItemPedido itemPedido = new ItemPedido();
-        itemPedido.setPedido(pedido);
-
-
-
-        itemPedido.addProduto(produto, quantidade);
-        itemPedido.setDesconto(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
-        itemPedido.setPrecoUnitario(BigDecimal.TEN.setScale(2, RoundingMode.HALF_UP));
-        itemPedido.setTipoDesconto(TipoDescontoItemPedido.NENHUM);
-        itemPedidos.add(itemPedido);
-        pedido.setItemPedidos(itemPedidos);
+        pedido.addItemPedido(produto, quantidade);
 
         return pedido;
     }
