@@ -71,6 +71,8 @@ public class WebSecurityConfig {
                         .permitAll()
                         .regexMatchers(HttpMethod.POST, "/api/auth/signin")
                         .permitAll()
+                        .regexMatchers(HttpMethod.POST, "/api/clientes")
+                        .permitAll()
                         .anyRequest()
                         .authenticated()
                 )
