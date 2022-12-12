@@ -1,5 +1,8 @@
 package br.com.alura.clientelo.controller.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -9,7 +12,12 @@ public class AllProdutosDto {
     Integer totalPages;
     Integer pageSize;
 
-    public AllProdutosDto(List<ProdutoResumeDto> produtos, Integer currentPage, Integer totalPages, Integer pageSize) {
+    @JsonCreator
+    public AllProdutosDto(
+            @JsonProperty("produtos") List<ProdutoResumeDto> produtos,
+            @JsonProperty("currentPage") Integer currentPage,
+            @JsonProperty("totalPages") Integer totalPages,
+            @JsonProperty("pageSize") Integer pageSize) {
         this.produtos = produtos;
         this.currentPage = currentPage;
         this.totalPages = totalPages;

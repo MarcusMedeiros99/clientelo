@@ -1,8 +1,12 @@
 # ClientELO
 
-- Use `docker-compose up` para iniciar a aplicação
+- Use `make run` para iniciar a aplicação
 - O banco de dados fica exposto em localhost:33006
 - A aplicação fica exposta em localhost:8080
+
+# Testing
+
+- Antes de rodar os testes, é necessário subir o banco de dados. Utilize `make test_setup`
 
 # Documentação
 

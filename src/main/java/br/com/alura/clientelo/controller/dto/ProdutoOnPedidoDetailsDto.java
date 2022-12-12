@@ -13,6 +13,8 @@ public class ProdutoOnPedidoDetailsDto {
     private BigDecimal valor;
     private BigDecimal desconto;
 
+    ProdutoOnPedidoDetailsDto() {}
+
     public Long getId() {
         return id;
     }

@@ -13,6 +13,8 @@ public class PedidoDTO {
     private BigDecimal totalComDesconto;
     private LocalDate data;
 
+    PedidoDTO () {}
+
     public Long getId() {
         return id;
     }

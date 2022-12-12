@@ -4,6 +4,7 @@ import br.com.alura.clientelo.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
@@ -33,6 +34,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
+@Profile("prod")
 public class WebSecurityConfig {
 
     @Autowired
@@ -48,15 +50,6 @@ public class WebSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-//    @Bean
-//    public AuthenticationManagerBuilder authenticationManagerBuilderBean(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-//        return authenticationManagerBuilder.userDetailsService(usuarioService).passwordEncoder(passwordEncoder());
-//    }
-//
-//    @Bean
-//    public AuthenticationManager authenticationManagerBean(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-//        return authenticationManagerBuilder.build();
-//    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

@@ -1,6 +1,7 @@
 package br.com.alura.clientelo.controller.dto;
 
 import br.com.alura.clientelo.models.Produto;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.math.BigDecimal;
 
@@ -9,6 +10,17 @@ public class ProdutoResumeDto {
     private String nome;
     private String nomeCategoria;
     private BigDecimal preco;
+
+    public ProdutoResumeDto(
+            @JsonProperty("id") Long id,
+            @JsonProperty("nome") String nome,
+            @JsonProperty("nomeCategoria") String nomeCategoria,
+            @JsonProperty("preco") BigDecimal preco) {
+        this.id = id;
+        this.nome = nome;
+        this.nomeCategoria = nomeCategoria;
+        this.preco = preco;
+    }
 
     public ProdutoResumeDto(Produto produto) {
         this.id = produto.getId();

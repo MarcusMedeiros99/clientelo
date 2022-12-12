@@ -15,6 +15,8 @@ public class PedidoDetailsDto {
     private Long clienteId;
     private String clienteNome;
 
+    public PedidoDetailsDto() {}
+
     public LocalDate getDataDoPedido() {
         return dataDoPedido;
     }
