@@ -1,6 +1,6 @@
 package br.com.alura.clientelo.dao;
 
-import br.com.alura.clientelo.models.Produto;
+import br.com.alura.clientelo.core.entity.produto.Produto;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 

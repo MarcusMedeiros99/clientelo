@@ -1,6 +1,5 @@
 package br.com.alura.clientelo.config.security;
 
-import br.com.alura.clientelo.models.Usuario;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,7 +1,7 @@
 package br.com.alura.clientelo.dao.specifications;
 
-import br.com.alura.clientelo.models.Categoria;
-import br.com.alura.clientelo.models.Produto;
+import br.com.alura.clientelo.core.entity.produto.Categoria;
+import br.com.alura.clientelo.core.entity.produto.Produto;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Join;

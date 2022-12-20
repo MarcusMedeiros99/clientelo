@@ -1,8 +1,8 @@
 package br.com.alura.clientelo.controller.form;
 
-import br.com.alura.clientelo.models.Address;
-import br.com.alura.clientelo.models.Cliente;
-import br.com.alura.clientelo.models.UsuarioRole;
+import br.com.alura.clientelo.core.entity.cliente.Address;
+import br.com.alura.clientelo.core.entity.cliente.Cliente;
+import br.com.alura.clientelo.core.entity.usuario.UsuarioRole;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.constraints.*;

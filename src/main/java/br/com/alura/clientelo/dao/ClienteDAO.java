@@ -1,7 +1,7 @@
 package br.com.alura.clientelo.dao;
 
 import br.com.alura.clientelo.dao.vo.ClienteFielVO;
-import br.com.alura.clientelo.models.Cliente;
+import br.com.alura.clientelo.core.entity.cliente.Cliente;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

@@ -1,7 +1,7 @@
 package br.com.alura.clientelo.config.security;
 
 
-import br.com.alura.clientelo.service.UsuarioService;
+import br.com.alura.clientelo.core.usecase.auth.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;

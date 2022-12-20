@@ -1,13 +1,12 @@
 package br.com.alura.clientelo.controller;
 
-import br.com.alura.clientelo.controller.dto.AllProdutosDto;
-import br.com.alura.clientelo.controller.dto.ProdutoDto;
-import br.com.alura.clientelo.controller.dto.ProdutoResumeDto;
-import br.com.alura.clientelo.controller.form.ProdutoCreateForm;
+import br.com.alura.clientelo.controller.produto.AllProdutosDto;
+import br.com.alura.clientelo.controller.produto.ProdutoDto;
+import br.com.alura.clientelo.controller.produto.ProdutoResumeDto;
 import br.com.alura.clientelo.dao.CategoriaDAO;
 import br.com.alura.clientelo.dao.ProdutoDAO;
-import br.com.alura.clientelo.models.Categoria;
-import br.com.alura.clientelo.models.Produto;
+import br.com.alura.clientelo.core.entity.produto.Categoria;
+import br.com.alura.clientelo.core.entity.produto.Produto;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;

@@ -1,7 +1,7 @@
 package br.com.alura.clientelo.dao;
 
 import br.com.alura.clientelo.dao.vo.VendasPorCategoriaVO;
-import br.com.alura.clientelo.models.Categoria;
+import br.com.alura.clientelo.core.entity.produto.Categoria;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 

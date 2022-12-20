@@ -1,15 +1,14 @@
 package br.com.alura.clientelo.controller.dto;
 
 import br.com.alura.clientelo.WebApplication;
+import br.com.alura.clientelo.core.usecase.pedido.ItemPedidoDto;
 import br.com.alura.clientelo.dao.ProdutoDAO;
 import br.com.alura.clientelo.exceptions.ProdutoNotFoundException;
-import br.com.alura.clientelo.models.ItemPedido;
-import br.com.alura.clientelo.models.Pedido;
-import br.com.alura.clientelo.models.Produto;
-import br.com.alura.clientelo.models.TipoDescontoItemPedido;
+import br.com.alura.clientelo.core.entity.pedido.ItemPedido;
+import br.com.alura.clientelo.core.entity.pedido.Pedido;
+import br.com.alura.clientelo.core.entity.produto.Produto;
+import br.com.alura.clientelo.core.entity.pedido.TipoDescontoItemPedido;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.aspectj.lang.annotation.Before;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

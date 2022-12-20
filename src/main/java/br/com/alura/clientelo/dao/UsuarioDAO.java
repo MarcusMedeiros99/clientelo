@@ -1,7 +1,6 @@
 package br.com.alura.clientelo.dao;
 
-import br.com.alura.clientelo.models.Usuario;
-import org.springframework.data.jpa.repository.Query;
+import br.com.alura.clientelo.core.entity.usuario.Usuario;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;

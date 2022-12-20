@@ -1,14 +1,18 @@
 package br.com.alura.clientelo.controller;
 
-import br.com.alura.clientelo.controller.dto.PedidoDTO;
-import br.com.alura.clientelo.controller.dto.PedidoDetailsDto;
-import br.com.alura.clientelo.controller.dto.ProdutoDto;
+import br.com.alura.clientelo.controller.pedido.PedidoDTO;
+import br.com.alura.clientelo.controller.pedido.PedidoDetailsDto;
+import br.com.alura.clientelo.core.entity.cliente.Address;
+import br.com.alura.clientelo.core.entity.cliente.Cliente;
+import br.com.alura.clientelo.core.entity.pedido.Pedido;
+import br.com.alura.clientelo.core.entity.produto.Categoria;
+import br.com.alura.clientelo.core.entity.produto.Produto;
+import br.com.alura.clientelo.core.entity.usuario.RoleEnum;
+import br.com.alura.clientelo.core.entity.usuario.UsuarioRole;
 import br.com.alura.clientelo.dao.*;
-import br.com.alura.clientelo.models.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.hibernate.Session;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
