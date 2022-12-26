@@ -8,7 +8,7 @@ services:
       - ./:/usr/src/clientelo
       - ./target:/usr/src/clientelo/target
       - $HOME/.m2:/root/.m2
-    command: mvn spring-boot:run
+    command: mvn spring-boot:run -DskipTests
     ports:
       - "8080:8080"
     depends_on:
@@ -25,3 +25,14 @@ services:
       - MYSQL_DATABASE=clientelo
     volumes:
       - ./db:/var/lib/mysql
+  clientelo-test-db:
+    image: mysql:8.0
+    ports:
+      - "33007:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=123
+      - MYSQL_USER=clientelo-test
+      - MYSQL_PASSWORD=123
+      - MYSQL_DATABASE=clientelo-test
+    volumes:
+      - ./db-test:/var/lib/mysql

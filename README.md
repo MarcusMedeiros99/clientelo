@@ -11,3 +11,4 @@
 # Documentação
 
 A documentação feita via Swagger fica exposta em localhost:8080/swagger-ui/index.html
+Na raiz do projeto existe um diagrama de classes em HTML e pdf

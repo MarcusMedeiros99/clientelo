@@ -131,7 +131,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.7.3</version>
                 <configuration>
-                    <mainClass>br.com.alura.clientelo.WebApplication</mainClass>
+                    <mainClass>br.com.alura.clientelo.web.WebApplication</mainClass>
                 </configuration>
             </plugin>
         </plugins>
